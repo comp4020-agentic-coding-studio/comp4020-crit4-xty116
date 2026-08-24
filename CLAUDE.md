@@ -59,6 +59,14 @@ here and wire it into `check`. Growing this file is the work.
 - Example patterns are editable note data, not audio assets. Loading one must
   visibly replace the grid so a player can hear it, alter it, and make it their
   own.
+- Each library example must be a complete original composition with eight
+  named bars of sixteen steps, not one short pattern presented as a song.
+- Six instrument lanes must use recognisably different synthesis recipes
+  (percussion, bass and pitched voices), while sharing the protected master
+  output. Switching sound palettes must change those recipes without loading
+  samples.
+- Automatic performance must advance across bars and return cleanly to the
+  beginning. The currently displayed bar stays editable before and during play.
 - At 390x844 the first note, pattern library, grid and transport must all remain
   reachable without horizontal overflow.
 - A week-specific contract may be committed red once as a deliberate baseline.
