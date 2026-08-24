@@ -61,12 +61,19 @@ here and wire it into `check`. Growing this file is the work.
   own.
 - Each library example must be a complete original composition with eight
   named bars of sixteen steps, not one short pattern presented as a song.
+- Composition data must carry explicit MIDI pitches, durations and chord
+  qualities. Do not derive the lead melody from the current bar or step number.
+- Every example needs a visible song form containing an intro, verse, chorus,
+  bridge and outro. Its lead lane must contain at least 32 pitched events and
+  span at least seven distinct notes so the example reads as a written melody.
 - Six instrument lanes must use recognisably different synthesis recipes
   (percussion, bass and pitched voices), while sharing the protected master
   output. Switching sound palettes must change those recipes without loading
   samples.
 - Automatic performance must advance across bars and return cleanly to the
   beginning. The currently displayed bar stays editable before and during play.
+- The performance stage must include a live canvas visual driven by the six
+  synthesis voices. It is part of the instrument, not a decorative animation.
 - At 390x844 the first note, pattern library, grid and transport must all remain
   reachable without horizontal overflow.
 - A week-specific contract may be committed red once as a deliberate baseline.

@@ -8,7 +8,7 @@ const doc = new JSDOM(html).window.document;
 const source = readFileSync(resolve("main.ts"), "utf8");
 const css = readFileSync(resolve("styles.css"), "utf8");
 
-describe("crit 4: Mosaic is a complete browser composition studio", () => {
+describe("crit 4: Weave is a complete browser composition studio", () => {
   it("opens on one obvious gesture that can make the first sound", () => {
     const entry = doc.querySelector<HTMLButtonElement>('[data-testid="begin-instrument"]');
 
@@ -20,6 +20,7 @@ describe("crit 4: Mosaic is a complete browser composition studio", () => {
   it("exposes one performance surface, an editable grid and live state", () => {
     expect(doc.querySelectorAll('[data-testid="instrument"]')).toHaveLength(1);
     expect(doc.querySelector('[data-testid="sequencer-grid"]')).toBeTruthy();
+    expect(doc.querySelector('[data-testid="sound-canvas"]')).toBeTruthy();
 
     const status = doc.querySelector('[data-testid="instrument-status"]');
     expect(status?.getAttribute("role")).toBe("status");
@@ -35,6 +36,8 @@ describe("crit 4: Mosaic is a complete browser composition studio", () => {
     expect(source).toMatch(/BARS_PER_SONG/);
     expect(source).toMatch(/STEPS_PER_BAR/);
     expect(source).toMatch(/scheduleAhead/);
+    expect(source).toMatch(/requestAnimationFrame/);
+    expect(source).toMatch(/noteName/);
   });
 
   it("builds six distinct live-synthesis voices without recordings", () => {

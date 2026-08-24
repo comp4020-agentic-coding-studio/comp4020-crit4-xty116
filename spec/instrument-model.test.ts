@@ -27,20 +27,43 @@ describe("complete composition model", () => {
   it("gives every bar six complete instrument lanes", () => {
     for (const composition of COMPOSITIONS) {
       for (const bar of composition.bars) {
+        expect(["INTRO", "VERSE", "PRE", "CHORUS", "BRIDGE", "OUTRO"]).toContain(
+          (bar as { section?: string }).section,
+        );
         const pattern = patternFromBar(bar);
         expect(pattern).toHaveLength(INSTRUMENT_TRACKS.length);
         expect(pattern.every((row) => row.length === STEPS_PER_BAR)).toBe(true);
-        expect(pattern.flat().some(Boolean)).toBe(true);
+        expect(pattern.flat().some((cell) => cell !== null)).toBe(true);
       }
+    }
+  });
+
+  it("writes a substantial, explicit lead melody for every complete piece", () => {
+    for (const composition of COMPOSITIONS) {
+      const sections = new Set(composition.bars.map((bar) => (bar as { section?: string }).section));
+      expect(sections).toEqual(new Set(["INTRO", "VERSE", "PRE", "CHORUS", "BRIDGE", "OUTRO"]));
+
+      const lead = composition.bars.flatMap((bar) => {
+        const row = (bar.rows as readonly unknown[])[4];
+        return Array.isArray(row)
+          ? row.filter(
+              (cell): cell is { pitch: number; length?: number } =>
+                typeof cell === "object" && cell !== null && "pitch" in cell,
+            )
+          : [];
+      });
+      expect(lead.length).toBeGreaterThanOrEqual(32);
+      expect(new Set(lead.map((event) => event.pitch)).size).toBeGreaterThanOrEqual(7);
+      expect(lead.every((event) => typeof event.length === "number")).toBe(true);
     }
   });
 
   it("edits a bar without mutating the previous pattern", () => {
     const original = createEmptyPattern();
-    const changed = setPatternCell(original, 2, 12, true);
+    const changed = setPatternCell(original, 2, 12, { pitch: 48, length: 1, velocity: 0.8 });
 
-    expect(original[2]?.[12]).toBe(false);
-    expect(changed[2]?.[12]).toBe(true);
+    expect(original[2]?.[12]).toBeNull();
+    expect(changed[2]?.[12]).toEqual({ pitch: 48, length: 1, velocity: 0.8 });
   });
 
   it("maps six performance keys and ignores browser commands", () => {
