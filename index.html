@@ -3,165 +3,187 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Loop Press | A playable pattern machine</title>
+    <title>Mosaic | Live composition studio</title>
     <meta
       name="description"
-      content="Loop Press is a live browser instrument for printing, changing and performing colourful musical patterns."
+      content="Mosaic is a live browser composition studio with six synthesised instruments and complete editable pieces."
     />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="./card.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#f2efe3" />
+    <meta name="theme-color" content="#171719" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main id="instrument-stage" data-testid="instrument" data-state="waiting">
-      <header class="app-header">
+      <header class="topbar">
         <nav aria-label="Primary">
-          <a class="wordmark" href="#instrument-stage" aria-label="Loop Press home">
-            <span class="press-mark" aria-hidden="true">
-              <i></i><i></i><i></i><i></i>
-            </span>
-            <span>LOOP PRESS</span>
+          <a class="brand" href="#instrument-stage" aria-label="Mosaic home">
+            <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <strong>MOSAIC</strong>
           </a>
         </nav>
-        <p class="edition">BROWSER INSTRUMENT / EDITION 04</p>
-        <div class="live-badge" aria-hidden="true"><span></span>LIVE SYNTH</div>
+        <p>LIVE COMPOSITION STUDIO</p>
+        <div class="engine-state" aria-hidden="true"><span></span>WEB AUDIO</div>
       </header>
 
-      <div class="machine-layout">
-        <section class="identity-panel" aria-labelledby="instrument-title">
-          <p class="kicker">PRINT SOUND / SHAPE TIME</p>
-          <h1 id="instrument-title">Loop<br />Press</h1>
-          <p class="thesis">One mark becomes a rhythm.</p>
-
-          <div class="first-sound">
+      <div class="studio-layout">
+        <aside class="library-panel" aria-labelledby="studio-title">
+          <div class="library-intro">
+            <p class="eyebrow">PLAY / ARRANGE / REMIX</p>
+            <h1 id="studio-title">Make a<br />piece your own.</h1>
             <button
               class="first-sound-button"
               type="button"
               data-testid="begin-instrument"
               aria-controls="instrument-stage"
             >
-              Print the first beat
+              Hear the first chord
             </button>
           </div>
 
-          <div class="transport-block">
-            <span class="field-label">AUTOMATIC PRESS</span>
-            <button
-              class="transport-button"
-              type="button"
-              data-testid="transport-toggle"
-              aria-pressed="false"
-            >
-              <span class="transport-symbol" aria-hidden="true"></span>
-              <span data-transport-label>Start loop</span>
-            </button>
-          </div>
+          <section class="piece-library" aria-labelledby="pieces-title">
+            <header>
+              <span class="section-label">COMPLETE PIECES</span>
+              <span>03</span>
+            </header>
+            <h2 id="pieces-title">Library</h2>
 
-          <div class="machine-readout" aria-label="Loop state">
-            <div><span>STEP</span><strong data-testid="current-step">--</strong></div>
-            <div><span>MODE</span><strong data-testid="current-voice">FELT</strong></div>
-          </div>
-        </section>
-
-        <section class="workbench" aria-labelledby="pattern-title">
-          <header class="section-heading">
-            <div>
-              <span class="field-label">EXAMPLE PATTERNS</span>
-              <h2 id="pattern-title">Pattern library</h2>
+            <div class="piece-list" role="group" aria-label="Complete example compositions">
+              <button type="button" data-composition="after-rain" aria-pressed="true">
+                <span class="piece-cover rain-cover" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <span class="piece-copy">
+                  <strong>After Rain</strong>
+                  <small>Patient glow</small>
+                  <span><b>0:37</b><b>104 BPM</b><b>8 BARS</b></span>
+                </span>
+              </button>
+              <button type="button" data-composition="night-tram" aria-pressed="false">
+                <span class="piece-cover tram-cover" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <span class="piece-copy">
+                  <strong>Night Tram</strong>
+                  <small>Restless motion</small>
+                  <span><b>0:30</b><b>126 BPM</b><b>8 BARS</b></span>
+                </span>
+              </button>
+              <button type="button" data-composition="sunday-kitchen" aria-pressed="false">
+                <span class="piece-cover kitchen-cover" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <span class="piece-copy">
+                  <strong>Sunday Kitchen</strong>
+                  <small>Loose sunshine</small>
+                  <span><b>0:42</b><b>92 BPM</b><b>8 BARS</b></span>
+                </span>
+              </button>
             </div>
-            <span class="library-count">03 EDITIONS</span>
+          </section>
+        </aside>
+
+        <section class="arranger" aria-labelledby="arranger-title">
+          <header class="piece-header">
+            <div>
+              <span class="section-label">NOW ARRANGING</span>
+              <h2 id="arranger-title" data-testid="composition-title">After Rain</h2>
+              <p data-testid="composition-character">Patient glow / 8 bars / 0:37</p>
+            </div>
+            <div class="transport">
+              <button type="button" data-testid="previous-bar" aria-label="Previous bar">&larr;</button>
+              <button
+                class="play-button"
+                type="button"
+                data-testid="transport-toggle"
+                aria-label="Play complete piece"
+                aria-pressed="false"
+              >
+                <span aria-hidden="true"></span>
+              </button>
+              <button type="button" data-testid="next-bar" aria-label="Next bar">&rarr;</button>
+              <strong data-transport-state>READY</strong>
+            </div>
           </header>
 
-          <div class="preset-list" role="group" aria-label="Example patterns">
-            <button type="button" data-preset="soft-machine" aria-pressed="false">
-              <span class="preset-number">01</span>
-              <strong>Soft Machine</strong>
-              <small>Steady / warm</small>
-              <span class="preset-rhythm" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-            </button>
-            <button type="button" data-preset="open-window" aria-pressed="false">
-              <span class="preset-number">02</span>
-              <strong>Open Window</strong>
-              <small>Wide / patient</small>
-              <span class="preset-rhythm" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-            </button>
-            <button type="button" data-preset="paper-rain" aria-pressed="false">
-              <span class="preset-number">03</span>
-              <strong>Paper Rain</strong>
-              <small>Light / restless</small>
-              <span class="preset-rhythm" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-            </button>
-          </div>
+          <section class="song-map" aria-label="Composition bars">
+            <header>
+              <span class="section-label">SONG MAP</span>
+              <span data-testid="song-position">BAR 01 / 08</span>
+            </header>
+            <div class="bar-navigator" data-testid="bar-navigator"></div>
+          </section>
 
-          <section class="press-plate" aria-labelledby="plate-title">
+          <section class="sequence-editor" aria-labelledby="editor-title">
             <header>
               <div>
-                <span class="field-label">EDITABLE LOOP</span>
-                <h2 id="plate-title">Press plate</h2>
+                <span class="section-label">CURRENT BAR</span>
+                <h3 id="editor-title" data-testid="bar-name">Mist</h3>
               </div>
-              <span class="plate-format">6 TONES / 8 STEPS</span>
+              <span class="edit-state" data-testid="edit-state">ORIGINAL ARRANGEMENT</span>
             </header>
-            <div class="beat-header" id="beat-header" aria-hidden="true"></div>
+            <div class="step-ruler" id="step-ruler" aria-hidden="true"></div>
             <div
-              class="matrix-grid"
-              id="matrix-grid"
+              class="track-grid"
+              id="track-grid"
               data-testid="sequencer-grid"
               role="grid"
-              aria-label="Editable six-note, eight-step music pattern"
+              aria-label="Editable six-instrument, sixteen-step arrangement"
             ></div>
+          </section>
+
+          <section class="performance-pads" aria-label="Manual instrument pads">
+            <button type="button" data-track-pad data-track-index="0" style="--track-colour: #f06449"><span>Kick</span><small>LOW PULSE</small><kbd>A</kbd></button>
+            <button type="button" data-track-pad data-track-index="1" style="--track-colour: #f3b64d"><span>Snare</span><small>PAPER SNAP</small><kbd>S</kbd></button>
+            <button type="button" data-track-pad data-track-index="2" style="--track-colour: #4eb889"><span>Bass</span><small>WARM CURRENT</small><kbd>D</kbd></button>
+            <button type="button" data-track-pad data-track-index="3" style="--track-colour: #4f8ee8"><span>Keys</span><small>SOFT CHORDS</small><kbd>J</kbd></button>
+            <button type="button" data-track-pad data-track-index="4" style="--track-colour: #9274d8"><span>Pluck</span><small>BRIGHT THREAD</small><kbd>K</kbd></button>
+            <button type="button" data-track-pad data-track-index="5" style="--track-colour: #e77fad"><span>Bell</span><small>CLEAR LIGHT</small><kbd>L</kbd></button>
           </section>
         </section>
 
-        <aside class="control-panel" aria-labelledby="controls-title">
-          <header class="section-heading compact-heading">
-            <div>
-              <span class="field-label">PRESS SETTINGS</span>
-              <h2 id="controls-title">Controls</h2>
-            </div>
+        <aside class="mixer-panel" aria-labelledby="mixer-title">
+          <header>
+            <span class="section-label">SOUND & FEEL</span>
+            <h2 id="mixer-title">Mixer</h2>
           </header>
 
-          <section class="control-section">
-            <span class="field-label">VOICE</span>
-            <div class="voice-switch" role="group" aria-label="Synth voice">
-              <button type="button" data-voice="felt" class="is-active" aria-pressed="true">Felt</button>
-              <button type="button" data-voice="wire" aria-pressed="false">Wire</button>
-              <button type="button" data-voice="chrome" aria-pressed="false">Chrome</button>
+          <section class="mixer-section">
+            <span class="section-label">PALETTE</span>
+            <div class="palette-switch" role="group" aria-label="Sound palette">
+              <button type="button" data-palette="velvet" class="is-active" aria-pressed="true">Velvet</button>
+              <button type="button" data-palette="voltage" aria-pressed="false">Voltage</button>
+              <button type="button" data-palette="porcelain" aria-pressed="false">Porcelain</button>
             </div>
           </section>
 
-          <section class="control-section range-control">
-            <label for="tempo"><span>TEMPO</span><output id="tempo-output" for="tempo">112 BPM</output></label>
-            <input id="tempo" name="tempo" type="range" min="72" max="156" value="112" />
-            <div class="range-ends" aria-hidden="true"><span>SLOW</span><span>FAST</span></div>
+          <section class="mixer-section range-control">
+            <label for="tempo"><span>TEMPO</span><output id="tempo-output" for="tempo">104 BPM</output></label>
+            <input id="tempo" name="tempo" type="range" min="72" max="150" value="104" />
           </section>
 
-          <section class="control-section range-control">
-            <label for="swing"><span>SWING</span><output id="swing-output" for="swing">18%</output></label>
-            <input id="swing" name="swing" type="range" min="0" max="38" value="18" />
-            <div class="range-ends" aria-hidden="true"><span>EVEN</span><span>LOOSE</span></div>
+          <section class="mixer-section range-control">
+            <label for="swing"><span>SWING</span><output id="swing-output" for="swing">12%</output></label>
+            <input id="swing" name="swing" type="range" min="0" max="38" value="12" />
           </section>
 
-          <div class="pattern-actions">
-            <button type="button" data-testid="variation-pattern">New variation</button>
-            <button type="button" data-testid="clear-pattern">Clear plate</button>
+          <section class="mixer-section track-legend">
+            <span class="section-label">INSTRUMENTS</span>
+            <ul>
+              <li><i style="--dot: #f06449"></i><span>Kick</span><small>SINE DROP</small></li>
+              <li><i style="--dot: #f3b64d"></i><span>Snare</span><small>NOISE + TONE</small></li>
+              <li><i style="--dot: #4eb889"></i><span>Bass</span><small>FILTERED SAW</small></li>
+              <li><i style="--dot: #4f8ee8"></i><span>Keys</span><small>TRIAD</small></li>
+              <li><i style="--dot: #9274d8"></i><span>Pluck</span><small>SHORT SQUARE</small></li>
+              <li><i style="--dot: #e77fad"></i><span>Bell</span><small>SINE HARMONICS</small></li>
+            </ul>
+          </section>
+
+          <div class="arrangement-actions">
+            <button type="button" data-testid="variation-bar">Vary this bar</button>
+            <button type="button" data-testid="clear-bar">Clear this bar</button>
           </div>
         </aside>
       </div>
 
-      <section class="manual-pads" aria-label="Manual note keys">
-        <button type="button" data-note-pad data-note-index="0" style="--pad-colour: #ff4f3f"><span>C4</span><kbd>A</kbd></button>
-        <button type="button" data-note-pad data-note-index="1" style="--pad-colour: #ff8f32"><span>D4</span><kbd>S</kbd></button>
-        <button type="button" data-note-pad data-note-index="2" style="--pad-colour: #f7c900"><span>E4</span><kbd>D</kbd></button>
-        <button type="button" data-note-pad data-note-index="3" style="--pad-colour: #28a96b"><span>G4</span><kbd>J</kbd></button>
-        <button type="button" data-note-pad data-note-index="4" style="--pad-colour: #2864dc"><span>A4</span><kbd>K</kbd></button>
-        <button type="button" data-note-pad data-note-index="5" style="--pad-colour: #8b55c5"><span>C5</span><kbd>L</kbd></button>
-      </section>
-
       <footer class="status-bar">
-        <p data-testid="instrument-status" role="status" aria-live="polite">The press is ready.</p>
-        <p>LIVE WEB AUDIO / NO SAMPLES</p>
+        <p data-testid="instrument-status" role="status" aria-live="polite">Choose a piece or make the first sound.</p>
+        <p>ALL SOUND SYNTHESISED LIVE</p>
       </footer>
     </main>
     <script type="module" src="./main.ts"></script>

@@ -1,48 +1,53 @@
 import { describe, expect, it } from "vitest";
 import {
-  INSTRUMENT_NOTES,
-  PATTERN_PRESETS,
-  STEP_COUNT,
+  BARS_PER_SONG,
+  COMPOSITIONS,
+  INSTRUMENT_TRACKS,
+  STEPS_PER_BAR,
+  compositionDurationSeconds,
   createEmptyPattern,
-  noteIndexForKey,
-  patternFromPreset,
+  patternFromBar,
   setPatternCell,
   stepDurationSeconds,
+  trackIndexForKey,
   transportClockSeconds,
 } from "../instrument-model";
 
-describe("loop press music model", () => {
-  it("keeps every playable pitch inside one ordered scale", () => {
-    expect(INSTRUMENT_NOTES).toHaveLength(6);
-    for (let index = 1; index < INSTRUMENT_NOTES.length; index += 1) {
-      expect(INSTRUMENT_NOTES[index]?.frequency).toBeGreaterThan(
-        INSTRUMENT_NOTES[index - 1]?.frequency ?? 0,
-      );
+describe("complete composition model", () => {
+  it("ships three full, varied eight-bar compositions", () => {
+    expect(COMPOSITIONS).toHaveLength(3);
+    for (const composition of COMPOSITIONS) {
+      expect(composition.bars).toHaveLength(BARS_PER_SONG);
+      expect(new Set(composition.bars.map((bar) => bar.rows.join("/"))).size).toBeGreaterThanOrEqual(6);
+      expect(compositionDurationSeconds(composition)).toBeGreaterThan(30);
+      expect(compositionDurationSeconds(composition)).toBeLessThan(45);
     }
   });
 
-  it("ships editable example patterns with the full grid shape", () => {
-    expect(PATTERN_PRESETS).toHaveLength(3);
-    for (const preset of PATTERN_PRESETS) {
-      const pattern = patternFromPreset(preset);
-      expect(pattern).toHaveLength(INSTRUMENT_NOTES.length);
-      expect(pattern.every((row) => row.length === STEP_COUNT)).toBe(true);
-      expect(pattern.flat().some(Boolean)).toBe(true);
+  it("gives every bar six complete instrument lanes", () => {
+    for (const composition of COMPOSITIONS) {
+      for (const bar of composition.bars) {
+        const pattern = patternFromBar(bar);
+        expect(pattern).toHaveLength(INSTRUMENT_TRACKS.length);
+        expect(pattern.every((row) => row.length === STEPS_PER_BAR)).toBe(true);
+        expect(pattern.flat().some(Boolean)).toBe(true);
+      }
     }
   });
 
-  it("edits a cell without mutating the previous pattern", () => {
+  it("edits a bar without mutating the previous pattern", () => {
     const original = createEmptyPattern();
-    const changed = setPatternCell(original, 2, 4, true);
+    const changed = setPatternCell(original, 2, 12, true);
 
-    expect(original[2]?.[4]).toBe(false);
-    expect(changed[2]?.[4]).toBe(true);
+    expect(original[2]?.[12]).toBe(false);
+    expect(changed[2]?.[12]).toBe(true);
   });
 
-  it("maps performance keys and ignores browser commands", () => {
-    expect(noteIndexForKey("a")).toBe(0);
-    expect(noteIndexForKey("L")).toBe(5);
-    expect(noteIndexForKey("Escape")).toBeNull();
+  it("maps six performance keys and ignores browser commands", () => {
+    expect(INSTRUMENT_TRACKS).toHaveLength(6);
+    expect(trackIndexForKey("a")).toBe(0);
+    expect(trackIndexForKey("L")).toBe(5);
+    expect(trackIndexForKey("Escape")).toBeNull();
   });
 
   it("keeps a swung pair the same overall length", () => {

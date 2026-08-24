@@ -8,7 +8,7 @@ const doc = new JSDOM(html).window.document;
 const source = readFileSync(resolve("main.ts"), "utf8");
 const css = readFileSync(resolve("styles.css"), "utf8");
 
-describe("crit 4: loop press is a playable browser instrument", () => {
+describe("crit 4: Mosaic is a complete browser composition studio", () => {
   it("opens on one obvious gesture that can make the first sound", () => {
     const entry = doc.querySelector<HTMLButtonElement>('[data-testid="begin-instrument"]');
 
@@ -26,23 +26,33 @@ describe("crit 4: loop press is a playable browser instrument", () => {
     expect(status?.getAttribute("aria-live")).toBe("polite");
   });
 
-  it("offers examples and a player-started automatic performance", () => {
-    expect(doc.querySelectorAll("[data-preset]")).toHaveLength(3);
+  it("offers three complete pieces and a player-started song transport", () => {
+    expect(doc.querySelectorAll("[data-composition]")).toHaveLength(3);
+    expect(doc.querySelector('[data-testid="bar-navigator"]')).toBeTruthy();
     expect(doc.querySelector('[data-testid="transport-toggle"]')).toBeTruthy();
     expect(doc.querySelector('input[name="tempo"]')).toBeTruthy();
     expect(doc.querySelector('input[name="swing"]')).toBeTruthy();
-    expect(source).toMatch(/stepDurationSeconds/);
+    expect(source).toMatch(/BARS_PER_SONG/);
+    expect(source).toMatch(/STEPS_PER_BAR/);
     expect(source).toMatch(/scheduleAhead/);
   });
 
-  it("synthesizes live instead of playing a recording", () => {
+  it("builds six distinct live-synthesis voices without recordings", () => {
     expect(doc.querySelector("audio, video")).toBeNull();
     expect(source).toMatch(/AudioContext/);
     expect(source).toMatch(/OscillatorNode/);
+    expect(source).toMatch(/AudioBufferSourceNode/);
     expect(source).toMatch(/GainNode/);
+    expect(source).toMatch(/triggerKick/);
+    expect(source).toMatch(/triggerSnare/);
+    expect(source).toMatch(/triggerBass/);
+    expect(source).toMatch(/triggerKeys/);
+    expect(source).toMatch(/triggerPluck/);
+    expect(source).toMatch(/triggerBell/);
   });
 
-  it("accepts pointer and keyboard performances", () => {
+  it("accepts pointer painting, direct pads and keyboard performances", () => {
+    expect(doc.querySelectorAll("[data-track-pad]")).toHaveLength(6);
     expect(source).toMatch(/pointerdown/);
     expect(source).toMatch(/pointermove/);
     expect(source).toMatch(/keydown/);
@@ -52,7 +62,7 @@ describe("crit 4: loop press is a playable browser instrument", () => {
     expect(doc.body.textContent).not.toMatch(/\b(score|fail(?:ed|ure)?|wrong)\b/i);
   });
 
-  it("adapts the complete workstation at the phone breakpoint", () => {
+  it("adapts the complete studio at the phone breakpoint", () => {
     expect(css).toMatch(/@media\s*\(max-width:\s*700px\)/);
   });
 });
