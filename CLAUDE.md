@@ -20,10 +20,10 @@ which deliverable applies. Read both before you plan or build.
 
 ## The link-preview card
 
-`public/card.png` (1200x630) is the image a shared link shows; `index.html`'s
+`public/card.jpg` (1200x630) is the image a shared link shows; `index.html`'s
 head points at it. Replace it and the `description` meta, and copy the head
 block into any new page. The card URL resolves against the page that names it,
-like any link --- `./card.png` is wrong one directory down, and nothing in CI
+like any link --- `./card.jpg` is wrong one directory down, and nothing in CI
 checks it, so look at the deployed head when you add pages.
 
 ## The checks
@@ -53,6 +53,14 @@ here and wire it into `check`. Growing this file is the work.
 - Pointer input must cover both mouse and touch; keyboard input must reach the
   same sound engine. Player position, movement, or timing must change at least
   two audible parameters so two performances can differ.
+- The sequencer and manual performance surface must use the same synthesis
+  engine. Automatic performance may begin only after the player presses its
+  transport control; it must never be a recording or unprompted autoplay.
+- Example patterns are editable note data, not audio assets. Loading one must
+  visibly replace the grid so a player can hear it, alter it, and make it their
+  own.
+- At 390x844 the first note, pattern library, grid and transport must all remain
+  reachable without horizontal overflow.
 - A week-specific contract may be committed red once as a deliberate baseline.
   The implementation commit immediately after it must return the full roster to
   green.
