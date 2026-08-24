@@ -40,3 +40,22 @@ A starting point, not a rulebook. As you learn what your prototype needs --- a
 convention the work has to hold to, a sensor that keeps catching you out (a
 linter, say), a fact about the stack that is easy to get wrong --- write it down
 here and wire it into `check`. Growing this file is the work.
+
+## Instrument constraints
+
+- The browser must synthesize every sound live with Web Audio. Do not use an
+  `<audio>` element, downloaded sample, or prerecorded backing track.
+- Create or resume the shared `AudioContext` only inside a player gesture. The
+  opening state must invite that first gesture without requiring instructions.
+- Keep every generated pitch inside one consonant scale and apply short attack
+  and release envelopes. The instrument has no score, failure state, or
+  musically invalid action.
+- Pointer input must cover both mouse and touch; keyboard input must reach the
+  same sound engine. Player position, movement, or timing must change at least
+  two audible parameters so two performances can differ.
+- A week-specific contract may be committed red once as a deliberate baseline.
+  The implementation commit immediately after it must return the full roster to
+  green.
+- Tests can verify wiring and state, but the ear is the final harness. Before
+  accepting the instrument, play it cold in a real browser at desktop and phone
+  widths, listen for clicks and runaway gain, and verify resize during a phrase.
