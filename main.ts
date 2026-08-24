@@ -7,6 +7,7 @@ import {
   patternFromPreset,
   setPatternCell,
   stepDurationSeconds,
+  transportClockSeconds,
   type InstrumentNote,
   type Pattern,
 } from "./instrument-model";
@@ -89,7 +90,11 @@ function ensureAudio(): AudioEngine | null {
 }
 
 function clockSeconds(): number {
-  return audio?.context.state === "running" ? audio.context.currentTime : performance.now() / 1000;
+  return transportClockSeconds(
+    audio?.context.state,
+    audio?.context.currentTime ?? 0,
+    performance.now() / 1000,
+  );
 }
 
 function activateInstrument(): void {

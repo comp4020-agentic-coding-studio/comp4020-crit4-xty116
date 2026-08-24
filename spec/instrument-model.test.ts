@@ -8,6 +8,7 @@ import {
   patternFromPreset,
   setPatternCell,
   stepDurationSeconds,
+  transportClockSeconds,
 } from "../instrument-model";
 
 describe("loop press music model", () => {
@@ -50,5 +51,11 @@ describe("loop press music model", () => {
 
     expect(swungPair).toBeCloseTo(straightPair);
     expect(stepDurationSeconds(160, 0, 0)).toBeLessThan(stepDurationSeconds(80, 0, 0));
+  });
+
+  it("keeps transport moving while audio permission resumes", () => {
+    expect(transportClockSeconds("running", 4.5, 12)).toBe(4.5);
+    expect(transportClockSeconds("suspended", 0, 12)).toBe(12);
+    expect(transportClockSeconds(undefined, 0, 12)).toBe(12);
   });
 });

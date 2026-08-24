@@ -86,3 +86,11 @@ export function stepDurationSeconds(tempo: number, step: number, swing: number):
   const swingAmount = clamp(swing, 0, 0.42);
   return baseEighth * (step % 2 === 0 ? 1 + swingAmount : 1 - swingAmount);
 }
+
+export function transportClockSeconds(
+  audioState: AudioContextState | undefined,
+  audioTime: number,
+  pageTime: number,
+): number {
+  return audioState === "running" ? audioTime : pageTime;
+}
