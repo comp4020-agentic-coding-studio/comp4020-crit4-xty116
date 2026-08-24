@@ -1,36 +1,54 @@
 import { describe, expect, it } from "vitest";
 import {
-  HARMONIC_SCALE,
-  pointForKey,
-  voiceForPoint,
+  INSTRUMENT_NOTES,
+  PATTERN_PRESETS,
+  STEP_COUNT,
+  createEmptyPattern,
+  noteIndexForKey,
+  patternFromPreset,
+  setPatternCell,
+  stepDurationSeconds,
 } from "../instrument-model";
 
-describe("orbit choir sound map", () => {
+describe("loop press music model", () => {
   it("keeps every playable pitch inside one ordered scale", () => {
-    expect(HARMONIC_SCALE).toHaveLength(15);
-    for (let index = 1; index < HARMONIC_SCALE.length; index += 1) {
-      expect(HARMONIC_SCALE[index]?.frequency).toBeGreaterThan(
-        HARMONIC_SCALE[index - 1]?.frequency ?? 0,
+    expect(INSTRUMENT_NOTES).toHaveLength(6);
+    for (let index = 1; index < INSTRUMENT_NOTES.length; index += 1) {
+      expect(INSTRUMENT_NOTES[index]?.frequency).toBeGreaterThan(
+        INSTRUMENT_NOTES[index - 1]?.frequency ?? 0,
       );
     }
   });
 
-  it("maps the two horizontal edges to the scale edges", () => {
-    expect(voiceForPoint(0, 50, 100, 100).note.name).toBe("C3");
-    expect(voiceForPoint(100, 50, 100, 100).note.name).toBe("A5");
+  it("ships editable example patterns with the full grid shape", () => {
+    expect(PATTERN_PRESETS).toHaveLength(3);
+    for (const preset of PATTERN_PRESETS) {
+      const pattern = patternFromPreset(preset);
+      expect(pattern).toHaveLength(INSTRUMENT_NOTES.length);
+      expect(pattern.every((row) => row.length === STEP_COUNT)).toBe(true);
+      expect(pattern.flat().some(Boolean)).toBe(true);
+    }
   });
 
-  it("lets vertical movement change timbre without leaving the pitch", () => {
-    const high = voiceForPoint(50, 0, 100, 100);
-    const low = voiceForPoint(50, 100, 100, 100);
+  it("edits a cell without mutating the previous pattern", () => {
+    const original = createEmptyPattern();
+    const changed = setPatternCell(original, 2, 4, true);
 
-    expect(high.note).toEqual(low.note);
-    expect(high.brightness).toBeGreaterThan(low.brightness);
+    expect(original[2]?.[4]).toBe(false);
+    expect(changed[2]?.[4]).toBe(true);
   });
 
-  it("maps playable keys and ignores browser commands", () => {
-    expect(pointForKey("a", 1000, 500)).toEqual({ x: 50, y: 150 });
-    expect(pointForKey(";", 1000, 500)).toEqual({ x: 950, y: 150 });
-    expect(pointForKey("Escape", 1000, 500)).toBeNull();
+  it("maps performance keys and ignores browser commands", () => {
+    expect(noteIndexForKey("a")).toBe(0);
+    expect(noteIndexForKey("L")).toBe(5);
+    expect(noteIndexForKey("Escape")).toBeNull();
+  });
+
+  it("keeps a swung pair the same overall length", () => {
+    const straightPair = stepDurationSeconds(120, 0, 0) + stepDurationSeconds(120, 1, 0);
+    const swungPair = stepDurationSeconds(120, 0, 0.3) + stepDurationSeconds(120, 1, 0.3);
+
+    expect(swungPair).toBeCloseTo(straightPair);
+    expect(stepDurationSeconds(160, 0, 0)).toBeLessThan(stepDurationSeconds(80, 0, 0));
   });
 });

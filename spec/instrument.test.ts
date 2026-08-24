@@ -8,24 +8,31 @@ const doc = new JSDOM(html).window.document;
 const source = readFileSync(resolve("main.ts"), "utf8");
 const css = readFileSync(resolve("styles.css"), "utf8");
 
-describe("crit 4: the browser is a playable instrument", () => {
+describe("crit 4: loop press is a playable browser instrument", () => {
   it("opens on one obvious gesture that can make the first sound", () => {
-    const entry = doc.querySelector<HTMLButtonElement>(
-      '[data-testid="begin-instrument"]',
-    );
+    const entry = doc.querySelector<HTMLButtonElement>('[data-testid="begin-instrument"]');
 
     expect(entry).toBeTruthy();
     expect(entry?.textContent?.trim().length).toBeGreaterThan(0);
     expect(entry?.getAttribute("aria-controls")).toBe("instrument-stage");
   });
 
-  it("exposes one full-stage performance surface and a live state", () => {
+  it("exposes one performance surface, an editable grid and live state", () => {
     expect(doc.querySelectorAll('[data-testid="instrument"]')).toHaveLength(1);
-    expect(doc.querySelector('canvas[aria-label]')).toBeTruthy();
+    expect(doc.querySelector('[data-testid="sequencer-grid"]')).toBeTruthy();
 
     const status = doc.querySelector('[data-testid="instrument-status"]');
     expect(status?.getAttribute("role")).toBe("status");
     expect(status?.getAttribute("aria-live")).toBe("polite");
+  });
+
+  it("offers examples and a player-started automatic performance", () => {
+    expect(doc.querySelectorAll("[data-preset]")).toHaveLength(3);
+    expect(doc.querySelector('[data-testid="transport-toggle"]')).toBeTruthy();
+    expect(doc.querySelector('input[name="tempo"]')).toBeTruthy();
+    expect(doc.querySelector('input[name="swing"]')).toBeTruthy();
+    expect(source).toMatch(/stepDurationSeconds/);
+    expect(source).toMatch(/scheduleAhead/);
   });
 
   it("synthesizes live instead of playing a recording", () => {
@@ -45,7 +52,7 @@ describe("crit 4: the browser is a playable instrument", () => {
     expect(doc.body.textContent).not.toMatch(/\b(score|fail(?:ed|ure)?|wrong)\b/i);
   });
 
-  it("adapts the instrument at the phone breakpoint", () => {
-    expect(css).toMatch(/@media\s*\(max-width:\s*600px\)/);
+  it("adapts the complete workstation at the phone breakpoint", () => {
+    expect(css).toMatch(/@media\s*\(max-width:\s*700px\)/);
   });
 });

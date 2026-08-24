@@ -3,91 +3,165 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Orbit Choir | A playable star map</title>
+    <title>Loop Press | A playable pattern machine</title>
     <meta
       name="description"
-      content="Orbit Choir is a browser instrument that turns touch, movement and keys into a luminous field of live-synthesised sound."
+      content="Loop Press is a live browser instrument for printing, changing and performing colourful musical patterns."
     />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="./card.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#05070b" />
+    <meta name="theme-color" content="#f2efe3" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main
-      id="instrument-stage"
-      class="instrument-stage"
-      data-testid="instrument"
-      data-state="waiting"
-    >
-      <canvas
-        id="star-field"
-        aria-label="Playable star field. Touch, drag, or use the letter keys from A to semicolon to make sound."
-      ></canvas>
-
-      <header class="topbar">
+    <main id="instrument-stage" data-testid="instrument" data-state="waiting">
+      <header class="app-header">
         <nav aria-label="Primary">
-          <a class="wordmark" href="#top" aria-label="Orbit Choir home">
-            <span class="wordmark-mark" aria-hidden="true"></span>
-            <span>ORBIT CHOIR</span>
+          <a class="wordmark" href="#instrument-stage" aria-label="Loop Press home">
+            <span class="press-mark" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+            </span>
+            <span>LOOP PRESS</span>
           </a>
         </nav>
-        <div class="live-state" aria-hidden="true">
-          <span class="live-dot"></span>
-          <span>LIVE SYNTHESIS</span>
-        </div>
+        <p class="edition">BROWSER INSTRUMENT / EDITION 04</p>
+        <div class="live-badge" aria-hidden="true"><span></span>LIVE SYNTH</div>
       </header>
 
-      <section class="opening" id="top" aria-labelledby="instrument-title">
-        <p class="eyebrow">A POLYPHONIC STAR MAP</p>
-        <h1 id="instrument-title">Orbit<br />Choir</h1>
-        <p class="opening-line">Every point is already in tune.</p>
-        <button
-          class="begin-button"
-          type="button"
-          data-testid="begin-instrument"
-          aria-controls="instrument-stage"
-        >
-          Touch the first star
-        </button>
+      <div class="machine-layout">
+        <section class="identity-panel" aria-labelledby="instrument-title">
+          <p class="kicker">PRINT SOUND / SHAPE TIME</p>
+          <h1 id="instrument-title">Loop<br />Press</h1>
+          <p class="thesis">One mark becomes a rhythm.</p>
+
+          <div class="first-sound">
+            <button
+              class="first-sound-button"
+              type="button"
+              data-testid="begin-instrument"
+              aria-controls="instrument-stage"
+            >
+              Print the first beat
+            </button>
+          </div>
+
+          <div class="transport-block">
+            <span class="field-label">AUTOMATIC PRESS</span>
+            <button
+              class="transport-button"
+              type="button"
+              data-testid="transport-toggle"
+              aria-pressed="false"
+            >
+              <span class="transport-symbol" aria-hidden="true"></span>
+              <span data-transport-label>Start loop</span>
+            </button>
+          </div>
+
+          <div class="machine-readout" aria-label="Loop state">
+            <div><span>STEP</span><strong data-testid="current-step">--</strong></div>
+            <div><span>MODE</span><strong data-testid="current-voice">FELT</strong></div>
+          </div>
+        </section>
+
+        <section class="workbench" aria-labelledby="pattern-title">
+          <header class="section-heading">
+            <div>
+              <span class="field-label">EXAMPLE PATTERNS</span>
+              <h2 id="pattern-title">Pattern library</h2>
+            </div>
+            <span class="library-count">03 EDITIONS</span>
+          </header>
+
+          <div class="preset-list" role="group" aria-label="Example patterns">
+            <button type="button" data-preset="soft-machine" aria-pressed="false">
+              <span class="preset-number">01</span>
+              <strong>Soft Machine</strong>
+              <small>Steady / warm</small>
+              <span class="preset-rhythm" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+            <button type="button" data-preset="open-window" aria-pressed="false">
+              <span class="preset-number">02</span>
+              <strong>Open Window</strong>
+              <small>Wide / patient</small>
+              <span class="preset-rhythm" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+            <button type="button" data-preset="paper-rain" aria-pressed="false">
+              <span class="preset-number">03</span>
+              <strong>Paper Rain</strong>
+              <small>Light / restless</small>
+              <span class="preset-rhythm" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+          </div>
+
+          <section class="press-plate" aria-labelledby="plate-title">
+            <header>
+              <div>
+                <span class="field-label">EDITABLE LOOP</span>
+                <h2 id="plate-title">Press plate</h2>
+              </div>
+              <span class="plate-format">6 TONES / 8 STEPS</span>
+            </header>
+            <div class="beat-header" id="beat-header" aria-hidden="true"></div>
+            <div
+              class="matrix-grid"
+              id="matrix-grid"
+              data-testid="sequencer-grid"
+              role="grid"
+              aria-label="Editable six-note, eight-step music pattern"
+            ></div>
+          </section>
+        </section>
+
+        <aside class="control-panel" aria-labelledby="controls-title">
+          <header class="section-heading compact-heading">
+            <div>
+              <span class="field-label">PRESS SETTINGS</span>
+              <h2 id="controls-title">Controls</h2>
+            </div>
+          </header>
+
+          <section class="control-section">
+            <span class="field-label">VOICE</span>
+            <div class="voice-switch" role="group" aria-label="Synth voice">
+              <button type="button" data-voice="felt" class="is-active" aria-pressed="true">Felt</button>
+              <button type="button" data-voice="wire" aria-pressed="false">Wire</button>
+              <button type="button" data-voice="chrome" aria-pressed="false">Chrome</button>
+            </div>
+          </section>
+
+          <section class="control-section range-control">
+            <label for="tempo"><span>TEMPO</span><output id="tempo-output" for="tempo">112 BPM</output></label>
+            <input id="tempo" name="tempo" type="range" min="72" max="156" value="112" />
+            <div class="range-ends" aria-hidden="true"><span>SLOW</span><span>FAST</span></div>
+          </section>
+
+          <section class="control-section range-control">
+            <label for="swing"><span>SWING</span><output id="swing-output" for="swing">18%</output></label>
+            <input id="swing" name="swing" type="range" min="0" max="38" value="18" />
+            <div class="range-ends" aria-hidden="true"><span>EVEN</span><span>LOOSE</span></div>
+          </section>
+
+          <div class="pattern-actions">
+            <button type="button" data-testid="variation-pattern">New variation</button>
+            <button type="button" data-testid="clear-pattern">Clear plate</button>
+          </div>
+        </aside>
+      </div>
+
+      <section class="manual-pads" aria-label="Manual note keys">
+        <button type="button" data-note-pad data-note-index="0" style="--pad-colour: #ff4f3f"><span>C4</span><kbd>A</kbd></button>
+        <button type="button" data-note-pad data-note-index="1" style="--pad-colour: #ff8f32"><span>D4</span><kbd>S</kbd></button>
+        <button type="button" data-note-pad data-note-index="2" style="--pad-colour: #f7c900"><span>E4</span><kbd>D</kbd></button>
+        <button type="button" data-note-pad data-note-index="3" style="--pad-colour: #28a96b"><span>G4</span><kbd>J</kbd></button>
+        <button type="button" data-note-pad data-note-index="4" style="--pad-colour: #2864dc"><span>A4</span><kbd>K</kbd></button>
+        <button type="button" data-note-pad data-note-index="5" style="--pad-colour: #8b55c5"><span>C5</span><kbd>L</kbd></button>
       </section>
 
-      <section class="performance-panel" aria-label="Instrument controls">
-        <div class="voice-control" role="group" aria-label="Voice">
-          <span class="control-label">VOICE</span>
-          <button class="voice-button is-active" type="button" data-voice="glass" aria-pressed="true">
-            Glass
-          </button>
-          <button class="voice-button" type="button" data-voice="ember" aria-pressed="false">
-            Ember
-          </button>
-          <button class="voice-button" type="button" data-voice="pulse" aria-pressed="false">
-            Pulse
-          </button>
-        </div>
-        <button class="clear-button" type="button" data-testid="clear-sky">Clear sky</button>
-      </section>
-
-      <section class="readout" aria-label="Current sound">
-        <div>
-          <span class="readout-label">CURRENT STAR</span>
-          <strong class="note-name" data-testid="note-name">C4</strong>
-        </div>
-        <div>
-          <span class="readout-label">CONSTELLATION</span>
-          <strong class="note-count" data-testid="note-count">00</strong>
-        </div>
-      </section>
-
-      <p class="key-line" aria-hidden="true">A&nbsp; S&nbsp; D&nbsp; F&nbsp; G&nbsp; H&nbsp; J&nbsp; K&nbsp; L&nbsp; ;</p>
-      <p class="instrument-status" data-testid="instrument-status" role="status" aria-live="polite">
-        The sky is waiting.
-      </p>
-
-      <footer>
-        <span>CANBERRA / 2026</span>
-        <span>TOUCH + DRAG + KEYS</span>
+      <footer class="status-bar">
+        <p data-testid="instrument-status" role="status" aria-live="polite">The press is ready.</p>
+        <p>LIVE WEB AUDIO / NO SAMPLES</p>
       </footer>
     </main>
     <script type="module" src="./main.ts"></script>
