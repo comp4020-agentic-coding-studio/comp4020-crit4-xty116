@@ -1,17 +1,17 @@
-# Mosaic
+# WEAVE
 
-Mosaic is a live composition studio for COMP4020 Crit 4. It turns the browser into a six-instrument sequencer where every sound is synthesised in real time with the Web Audio API.
+WEAVE is a live song instrument for COMP4020 Crit 4. Six synthesised voices appear as moving coloured threads, responding to both a complete automatic performance and the player's own gestures.
 
 ## Play
 
-- Choose **Hear the first chord** for the opening sound gesture.
-- Play Kick, Snare, Bass, Keys, Pluck and Bell with the on-screen pads or `A S D J K L`.
-- Select one of three complete original pieces: After Rain, Night Tram or Sunday Kitchen.
-- Start the main transport to hear all eight named bars perform in sequence.
-- Open any bar and click or drag across its 16-step grid to rewrite the arrangement.
-- Change the live performance with Velvet, Voltage and Porcelain palettes, tempo and swing.
+- Select **Hear the opening** to wake the live Web Audio ensemble.
+- Choose Glasshouse Morning, Neon Letters or Small Hours from the set list.
+- Select **Play the song** to hear its intro, verses, chorus, bridge and outro unfold.
+- Perform Pulse, Clap, Lowline, Harmony, Lead and Glint with the on-screen pads or `A S D J K L`.
+- Open any of the eight phrases and edit its 16-step grid. Pitched cells display their actual note names.
+- Recompose a phrase or reshape the full performance with three palettes, tempo and swing.
 
-The pieces store only arrangement data. Manual notes, grid previews and automatic playback all use the same six live synthesis recipes; there are no recordings or audio assets.
+Each example contains explicit pitches, note lengths, dynamics and chord qualities. The automatic arrangement, opening gesture, grid previews and manual pads share the same six Web Audio signal paths. No samples or recordings are used.
 
 ## Development
 
@@ -23,4 +23,4 @@ pnpm check:evidence
 pnpm build
 ```
 
-The deployed studio lives at [comp4020-agentic-coding-studio.github.io/comp4020-crit4-xty116](https://comp4020-agentic-coding-studio.github.io/comp4020-crit4-xty116/).
+The deployed instrument lives at [comp4020-agentic-coding-studio.github.io/comp4020-crit4-xty116](https://comp4020-agentic-coding-studio.github.io/comp4020-crit4-xty116/).
