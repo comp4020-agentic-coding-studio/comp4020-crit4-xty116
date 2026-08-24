@@ -3,35 +3,92 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>COMP4020 prototype</title>
+    <title>Orbit Choir | A playable star map</title>
     <meta
       name="description"
-      content="Replace this with one sentence saying what this page is. A search result and a link preview both show it."
+      content="Orbit Choir is a browser instrument that turns touch, movement and keys into a luminous field of live-synthesised sound."
     />
-
-    <!--
-      The link-preview card: public/card.png, 1200x630 --- replace it. The URL
-      resolves against this page, like any link. No og:title/og:description:
-      scrapers fall back to the <title> and description above.
-    -->
     <meta property="og:type" content="website" />
     <meta property="og:image" content="./card.png" />
     <meta name="twitter:card" content="summary_large_image" />
-
+    <meta name="theme-color" content="#05070b" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header>
-      <nav aria-label="Primary">
-        <a href="./">Home</a>
-      </nav>
-    </header>
-    <main>
-      <h1>COMP4020 prototype</h1>
-      <p data-testid="intro">
-        Replace this with your prototype. This week's brief is on the course website;
-        <code>spec/README.md</code> explains how the checks in this repo relate to it.
+    <main
+      id="instrument-stage"
+      class="instrument-stage"
+      data-testid="instrument"
+      data-state="waiting"
+    >
+      <canvas
+        id="star-field"
+        aria-label="Playable star field. Touch, drag, or use the letter keys from A to semicolon to make sound."
+      ></canvas>
+
+      <header class="topbar">
+        <nav aria-label="Primary">
+          <a class="wordmark" href="#top" aria-label="Orbit Choir home">
+            <span class="wordmark-mark" aria-hidden="true"></span>
+            <span>ORBIT CHOIR</span>
+          </a>
+        </nav>
+        <div class="live-state" aria-hidden="true">
+          <span class="live-dot"></span>
+          <span>LIVE SYNTHESIS</span>
+        </div>
+      </header>
+
+      <section class="opening" id="top" aria-labelledby="instrument-title">
+        <p class="eyebrow">A POLYPHONIC STAR MAP</p>
+        <h1 id="instrument-title">Orbit<br />Choir</h1>
+        <p class="opening-line">Every point is already in tune.</p>
+        <button
+          class="begin-button"
+          type="button"
+          data-testid="begin-instrument"
+          aria-controls="instrument-stage"
+        >
+          Touch the first star
+        </button>
+      </section>
+
+      <section class="performance-panel" aria-label="Instrument controls">
+        <div class="voice-control" role="group" aria-label="Voice">
+          <span class="control-label">VOICE</span>
+          <button class="voice-button is-active" type="button" data-voice="glass" aria-pressed="true">
+            Glass
+          </button>
+          <button class="voice-button" type="button" data-voice="ember" aria-pressed="false">
+            Ember
+          </button>
+          <button class="voice-button" type="button" data-voice="pulse" aria-pressed="false">
+            Pulse
+          </button>
+        </div>
+        <button class="clear-button" type="button" data-testid="clear-sky">Clear sky</button>
+      </section>
+
+      <section class="readout" aria-label="Current sound">
+        <div>
+          <span class="readout-label">CURRENT STAR</span>
+          <strong class="note-name" data-testid="note-name">C4</strong>
+        </div>
+        <div>
+          <span class="readout-label">CONSTELLATION</span>
+          <strong class="note-count" data-testid="note-count">00</strong>
+        </div>
+      </section>
+
+      <p class="key-line" aria-hidden="true">A&nbsp; S&nbsp; D&nbsp; F&nbsp; G&nbsp; H&nbsp; J&nbsp; K&nbsp; L&nbsp; ;</p>
+      <p class="instrument-status" data-testid="instrument-status" role="status" aria-live="polite">
+        The sky is waiting.
       </p>
+
+      <footer>
+        <span>CANBERRA / 2026</span>
+        <span>TOUCH + DRAG + KEYS</span>
+      </footer>
     </main>
     <script type="module" src="./main.ts"></script>
   </body>
