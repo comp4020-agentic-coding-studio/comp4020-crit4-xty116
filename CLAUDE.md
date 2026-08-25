@@ -74,6 +74,17 @@ here and wire it into `check`. Growing this file is the work.
   beginning. The currently displayed bar stays editable before and during play.
 - The performance stage must include a live canvas visual driven by the six
   synthesis voices. It is part of the instrument, not a decorative animation.
+- `piano.html` must be a second, linked performance room rather than a visual
+  restyle of the sequencer. Both pages must expose direct navigation to the
+  other and make the current room clear.
+- The piano must synthesize every key live through Web Audio, support pointer
+  glissando and keydown/keyup performance, and expose timbre, octave, sustain
+  and volume as playable controls.
+- The piano room must show multiple octaves at desktop widths and a complete,
+  finger-sized octave at the phone breakpoint without horizontal overflow.
+- Its automatic performance must reuse the authored event data in
+  `COMPOSITIONS`, illuminate the notes it performs, and begin only after the
+  player presses its transport control.
 - At 390x844 the first note, pattern library, grid and transport must all remain
   reachable without horizontal overflow.
 - A week-specific contract may be committed red once as a deliberate baseline.
