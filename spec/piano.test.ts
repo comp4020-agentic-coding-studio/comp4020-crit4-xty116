@@ -24,6 +24,7 @@ describe("crit 4: Piano Room is a second complete live instrument", () => {
 
   it("offers musical controls and a player-started full performance", () => {
     expect(doc.querySelectorAll("[data-timbre]")).toHaveLength(3);
+    expect(doc.querySelector('[data-timbre="grand"][aria-pressed="true"]')).toBeTruthy();
     expect(doc.querySelector('[data-testid="sustain-toggle"]')).toBeTruthy();
     expect(doc.querySelector('[data-testid="octave-down"]')).toBeTruthy();
     expect(doc.querySelector('[data-testid="octave-up"]')).toBeTruthy();
@@ -33,12 +34,23 @@ describe("crit 4: Piano Room is a second complete live instrument", () => {
     expect(source).toMatch(/scheduleDemo/);
   });
 
+  it("makes the complete A0-C8 piano range reachable inside the bench", () => {
+    expect(doc.querySelector('[data-testid="keyboard-navigator"]')).toBeTruthy();
+    expect(doc.querySelector('[data-testid="keyboard-scroll"]')).toBeTruthy();
+    expect(source).toMatch(/FULL_KEYBOARD_LOW\s*=\s*21/);
+    expect(source).toMatch(/FULL_KEYBOARD_HIGH\s*=\s*108/);
+    expect(source).toMatch(/scrollToMidi/);
+    expect(css).toMatch(/\.piano-keyboard\s*\{[^}]*width:\s*2704px/s);
+  });
+
   it("synthesizes sound live and accepts expressive pointer and key input", () => {
     expect(doc.querySelector("audio, video")).toBeNull();
     expect(source).toMatch(/AudioContext/);
     expect(source).toMatch(/OscillatorNode/);
     expect(source).toMatch(/GainNode/);
     expect(source).toMatch(/BiquadFilterNode/);
+    expect(source).toMatch(/createHammerTransient/);
+    expect(source).toMatch(/AudioBufferSourceNode/);
     expect(source).toMatch(/pointerdown/);
     expect(source).toMatch(/pointermove/);
     expect(source).toMatch(/pointerup/);

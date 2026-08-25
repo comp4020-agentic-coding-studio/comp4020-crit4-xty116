@@ -6,7 +6,7 @@ import {
 } from "./instrument-model.ts";
 import type { ChordQuality, NoteEvent } from "./instrument-model.ts";
 
-type Timbre = "felt" | "prism" | "reed";
+type Timbre = "grand" | "felt" | "electric";
 
 interface PianoVoice {
   readonly gain: GainNode;
@@ -42,6 +42,8 @@ function requiredCanvasContext(canvas: HTMLCanvasElement): CanvasRenderingContex
 
 const stage = required<HTMLElement>("#piano-stage");
 const keyboard = required<HTMLElement>("#piano-keyboard");
+const keyboardScroller = required<HTMLElement>('[data-testid="keyboard-scroll"]');
+const keyboardPosition = required<HTMLInputElement>('[data-testid="keyboard-navigator"]');
 const whiteKeys = required<HTMLElement>(".white-keys");
 const blackKeys = required<HTMLElement>(".black-keys");
 const beginButton = required<HTMLButtonElement>('[data-testid="begin-piano"]');
@@ -67,6 +69,8 @@ const KEY_COLOURS = [
 ] as const;
 const BLACK_PITCH_CLASSES = new Set([1, 3, 6, 8, 10]);
 const KEYBOARD_KEYS = ["a", "w", "s", "e", "d", "f", "t", "g", "y", "h", "u", "j", "k"] as const;
+const FULL_KEYBOARD_LOW = 21;
+const FULL_KEYBOARD_HIGH = 108;
 const CHORD_INTERVALS: Record<ChordQuality, readonly number[]> = {
   major: [0, 4, 7, 12],
   minor: [0, 3, 7, 12],
@@ -77,10 +81,10 @@ let audioContext: AudioContext | null = null;
 let masterGain: GainNode | null = null;
 let roomInput: ConvolverNode | null = null;
 let analyser: AnalyserNode | null = null;
-let currentTimbre: Timbre = "felt";
+let currentTimbre: Timbre = "grand";
 let register = 4;
-let rangeLowMidi = 48;
-let rangeHighMidi = 84;
+let rangeLowMidi = FULL_KEYBOARD_LOW;
+let rangeHighMidi = FULL_KEYBOARD_HIGH;
 let sustain = false;
 let demoPlaying = false;
 let demoStartTime = 0;
@@ -106,10 +110,6 @@ function frequencyForMidi(midi: number): number {
 
 function isBlack(midi: number): boolean {
   return BLACK_PITCH_CLASSES.has(((midi % 12) + 12) % 12);
-}
-
-function isPhone(): boolean {
-  return window.matchMedia("(max-width: 700px)").matches;
 }
 
 function fitToVisibleRange(midi: number): number {
@@ -151,9 +151,8 @@ function createKey(midi: number, whiteBefore: number, whiteCount: number): HTMLB
 }
 
 function renderKeyboard(): void {
-  const phone = isPhone();
-  rangeLowMidi = midiForOctave(phone ? register : register - 1);
-  rangeHighMidi = midiForOctave(phone ? register + 1 : register + 2);
+  rangeLowMidi = FULL_KEYBOARD_LOW;
+  rangeHighMidi = FULL_KEYBOARD_HIGH;
   const midis = Array.from({ length: rangeHighMidi - rangeLowMidi + 1 }, (_, index) => rangeLowMidi + index);
   const whiteCount = midis.filter((midi) => !isBlack(midi)).length;
   let whiteBefore = 0;
@@ -174,16 +173,27 @@ function renderKeyboard(): void {
 
   octaveOutput.value = `OCT ${register}`;
   octaveOutput.textContent = `OCT ${register}`;
-  registerLow.textContent = noteName(rangeLowMidi);
-  registerHigh.textContent = noteName(rangeHighMidi);
+  registerLow.textContent = "A0";
+  registerHigh.textContent = "C8";
 
   for (const [midi, tokens] of activeKeyTokens) {
     if (tokens.size > 0) keyElement(midi)?.classList.add("is-active");
   }
+
+  requestAnimationFrame(() => scrollToMidi(midiForOctave(register), false));
 }
 
 function keyElement(midi: number): HTMLElement | null {
   return keyboard.querySelector<HTMLElement>(`[data-midi="${midi}"]`);
+}
+
+function scrollToMidi(midi: number, smooth = true): void {
+  const clamped = Math.min(FULL_KEYBOARD_HIGH, Math.max(FULL_KEYBOARD_LOW, midi));
+  const key = keyElement(clamped);
+  if (!key) return;
+  const left = key.offsetLeft + key.offsetWidth / 2 - keyboardScroller.clientWidth / 2;
+  keyboardScroller.scrollTo({ left, behavior: smooth ? "smooth" : "auto" });
+  keyboardPosition.value = String(clamped);
 }
 
 function keyFromPoint(x: number, y: number): HTMLElement | null {
@@ -209,6 +219,40 @@ function makeRoomImpulse(context: AudioContext): AudioBuffer {
     }
   }
   return impulse;
+}
+
+function createHammerTransient(
+  context: AudioContext,
+  frequency: number,
+  when: number,
+  velocity: number,
+  amount: number,
+  destination: AudioNode,
+): AudioBufferSourceNode {
+  const duration = 0.045;
+  const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * duration), context.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let index = 0; index < data.length; index += 1) {
+    const decay = (1 - index / data.length) ** 5;
+    data[index] = (Math.random() * 2 - 1) * decay;
+  }
+
+  const source: AudioBufferSourceNode = context.createBufferSource();
+  const hammerFilter: BiquadFilterNode = context.createBiquadFilter();
+  const hammerGain: GainNode = context.createGain();
+  source.buffer = buffer;
+  hammerFilter.type = "bandpass";
+  hammerFilter.frequency.value = Math.min(9500, Math.max(700, frequency * 7));
+  hammerFilter.Q.value = 0.75;
+  hammerGain.gain.setValueAtTime(0.0001, when);
+  hammerGain.gain.linearRampToValueAtTime(Math.max(0.0001, velocity * amount * 0.22), when + 0.0015);
+  hammerGain.gain.exponentialRampToValueAtTime(0.0001, when + duration);
+  source.connect(hammerFilter);
+  hammerFilter.connect(hammerGain);
+  hammerGain.connect(destination);
+  source.start(when);
+  source.stop(when + duration + 0.01);
+  return source;
 }
 
 async function ensureAudio(): Promise<AudioContext> {
@@ -253,41 +297,70 @@ function createPianoVoice(
   const context = audioContext;
   const filter: BiquadFilterNode = context.createBiquadFilter();
   const gain: GainNode = context.createGain();
+  const panner: StereoPannerNode = context.createStereoPanner();
   const oscillators: OscillatorNode[] = [];
   const baseFrequency = frequencyForMidi(midi);
   const recipes: Record<Timbre, readonly { ratio: number; type: OscillatorType; amount: number; detune?: number }[]> = {
+    grand: [
+      { ratio: 1, type: "sine", amount: 0.62, detune: -1.4 },
+      { ratio: 1, type: "sine", amount: 0.62, detune: 1.6 },
+      { ratio: 2.005, type: "sine", amount: 0.28 },
+      { ratio: 3.018, type: "sine", amount: 0.13 },
+      { ratio: 4.04, type: "sine", amount: 0.055 },
+    ],
     felt: [
-      { ratio: 1, type: "triangle", amount: 1 },
-      { ratio: 2, type: "sine", amount: 0.24, detune: -3 },
-      { ratio: 0.5, type: "sine", amount: 0.12 },
+      { ratio: 1, type: "triangle", amount: 0.78, detune: -1 },
+      { ratio: 1, type: "sine", amount: 0.52, detune: 1.2 },
+      { ratio: 2.003, type: "sine", amount: 0.16 },
+      { ratio: 3.012, type: "sine", amount: 0.05 },
     ],
-    prism: [
-      { ratio: 1, type: "sine", amount: 1 },
-      { ratio: 2.01, type: "sine", amount: 0.42 },
-      { ratio: 3.99, type: "sine", amount: 0.18 },
-    ],
-    reed: [
-      { ratio: 1, type: "sawtooth", amount: 0.48, detune: -5 },
-      { ratio: 1, type: "triangle", amount: 0.72, detune: 5 },
-      { ratio: 2, type: "square", amount: 0.08 },
+    electric: [
+      { ratio: 1, type: "sine", amount: 0.92 },
+      { ratio: 2.01, type: "sine", amount: 0.34 },
+      { ratio: 3.99, type: "sine", amount: 0.16 },
+      { ratio: 7.98, type: "sine", amount: 0.045 },
     ],
   };
+  const pitchPosition = (midi - FULL_KEYBOARD_LOW) / (FULL_KEYBOARD_HIGH - FULL_KEYBOARD_LOW);
   const settings = {
-    felt: { attack: 0.018, decay: 0.62, sustain: 0.34, filter: 1900, release: 0.8 },
-    prism: { attack: 0.006, decay: 1.1, sustain: 0.24, filter: 7200, release: 1.65 },
-    reed: { attack: 0.045, decay: 0.34, sustain: 0.58, filter: 2800, release: 0.46 },
+    grand: {
+      attack: 0.003,
+      decay: 3.2 - pitchPosition * 1.55,
+      sustain: 0.045,
+      filter: Math.min(11000, Math.max(3000, baseFrequency * (6 + velocity * 7))),
+      release: 0.82,
+      hammer: 0.9,
+    },
+    felt: {
+      attack: 0.012,
+      decay: 2.25 - pitchPosition * 0.9,
+      sustain: 0.075,
+      filter: Math.min(5200, Math.max(1500, baseFrequency * 5)),
+      release: 1.05,
+      hammer: 0.24,
+    },
+    electric: {
+      attack: 0.006,
+      decay: 2.5 - pitchPosition * 0.65,
+      sustain: 0.16,
+      filter: 9800,
+      release: 1.55,
+      hammer: 0.04,
+    },
   }[currentTimbre];
-  const peak = Math.max(0.0001, velocity * 0.13);
+  const peak = Math.max(0.0001, velocity * (currentTimbre === "grand" ? 0.085 : 0.105));
 
   filter.type = "lowpass";
   filter.frequency.setValueAtTime(settings.filter, when);
-  filter.Q.value = currentTimbre === "reed" ? 2.1 : 0.7;
+  filter.Q.value = currentTimbre === "electric" ? 1.15 : 0.55;
   filter.connect(gain);
+  gain.connect(panner);
+  panner.pan.value = Math.max(-0.55, Math.min(0.55, (midi - 64) / 60));
   if (destination) {
-    gain.connect(destination);
+    panner.connect(destination);
   } else {
-    gain.connect(masterGain);
-    gain.connect(roomInput);
+    panner.connect(masterGain);
+    panner.connect(roomInput);
   }
 
   gain.gain.setValueAtTime(0.0001, when);
@@ -306,6 +379,7 @@ function createPianoVoice(
     oscillator.start(when);
     oscillators.push(oscillator);
   }
+  createHammerTransient(context, baseFrequency, when, velocity, settings.hammer, filter);
 
   let released = false;
   return {
@@ -670,7 +744,7 @@ beginButton.addEventListener("click", async () => {
     voice.release(when + 0.48);
     scheduleVisual(midi, 0.7, `opening-${index}`, when, 0.55);
   });
-  status.textContent = "Piano open / FELT";
+  status.textContent = "Piano open / CONCERT";
 });
 
 demoButton.addEventListener("click", () => {
@@ -689,16 +763,33 @@ for (const button of document.querySelectorAll<HTMLButtonElement>("[data-timbre]
 }
 
 required<HTMLButtonElement>('[data-testid="octave-down"]').addEventListener("click", () => {
-  register = Math.max(2, register - 1);
+  register = Math.max(1, register - 1);
   renderKeyboard();
   status.textContent = `Register ${register}.`;
 });
 
 required<HTMLButtonElement>('[data-testid="octave-up"]').addEventListener("click", () => {
-  register = Math.min(6, register + 1);
+  register = Math.min(7, register + 1);
   renderKeyboard();
   status.textContent = `Register ${register}.`;
 });
+
+keyboardPosition.addEventListener("input", () => {
+  scrollToMidi(Number(keyboardPosition.value), false);
+});
+
+keyboardScroller.addEventListener("scroll", () => {
+  const maximum = Math.max(1, keyboardScroller.scrollWidth - keyboardScroller.clientWidth);
+  const ratio = keyboardScroller.scrollLeft / maximum;
+  const midi = Math.round(FULL_KEYBOARD_LOW + ratio * (FULL_KEYBOARD_HIGH - FULL_KEYBOARD_LOW));
+  keyboardPosition.value = String(midi);
+});
+
+keyboardScroller.addEventListener("wheel", (event) => {
+  if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+  event.preventDefault();
+  keyboardScroller.scrollLeft += event.deltaY;
+}, { passive: false });
 
 sustainButton.addEventListener("click", () => {
   sustain = !sustain;

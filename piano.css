@@ -347,7 +347,7 @@
 
 .keyboard-register {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 42px minmax(180px, 1fr) 42px;
   align-items: center;
   height: 32px;
   padding: 0 16px;
@@ -359,10 +359,48 @@
 
 .keyboard-register span:last-child { justify-self: end; }
 
-.piano-keyboard {
-  position: relative;
+.keyboard-navigator {
+  display: grid;
+  grid-template-columns: auto minmax(120px, 320px);
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.keyboard-navigator span {
+  color: #4f4d49;
+  font-size: 7px;
+}
+
+.keyboard-navigator input {
+  width: 100%;
+  height: 3px;
+  margin: 0;
+  accent-color: #52c896;
+  cursor: ew-resize;
+}
+
+.piano-keyboard-scroll {
   width: 100%;
   height: 248px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-color: #6d6962 #d1cdc4;
+  scrollbar-width: thin;
+  touch-action: pan-x;
+}
+
+.piano-keyboard-scroll:focus-visible {
+  outline: 3px solid #5aa7ff;
+  outline-offset: -3px;
+}
+
+.piano-keyboard {
+  position: relative;
+  width: 2704px;
+  height: 100%;
   overflow: hidden;
   user-select: none;
   touch-action: none;
@@ -502,8 +540,11 @@
   .timbre-switch button { gap: 4px; font-size: 8px; }
   .timbre-switch i { display: none; }
 
-  .keyboard-register { height: 32px; padding: 0 10px; }
-  .piano-keyboard { height: 223px; }
+  .keyboard-register { grid-template-columns: 28px minmax(0, 1fr) 28px; height: 32px; padding: 0 10px; }
+  .keyboard-navigator { grid-template-columns: auto minmax(70px, 1fr); gap: 8px; }
+  .keyboard-navigator span { font-size: 6px; }
+  .piano-keyboard-scroll { height: 223px; }
+  .piano-keyboard { width: 2548px; }
   .piano-key-label { bottom: 10px; }
   .piano-key-label kbd { width: 20px; height: 20px; }
 }

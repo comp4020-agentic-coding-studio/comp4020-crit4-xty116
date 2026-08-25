@@ -70,9 +70,9 @@
           <div class="tone-control">
             <span class="control-label">VOICE</span>
             <div class="timbre-switch" role="group" aria-label="Piano voice">
-              <button type="button" data-timbre="felt" aria-pressed="true"><i></i>Felt</button>
-              <button type="button" data-timbre="prism" aria-pressed="false"><i></i>Prism</button>
-              <button type="button" data-timbre="reed" aria-pressed="false"><i></i>Reed</button>
+              <button type="button" data-timbre="grand" aria-pressed="true"><i></i>Concert</button>
+              <button type="button" data-timbre="felt" aria-pressed="false"><i></i>Felt</button>
+              <button type="button" data-timbre="electric" aria-pressed="false"><i></i>Electric</button>
             </div>
           </div>
 
@@ -99,18 +99,34 @@
         </section>
 
         <section class="keyboard-bench" aria-label="Playable piano">
-          <div class="keyboard-register" aria-hidden="true">
-            <span data-register-low>C3</span><span>WEAVE / 88</span><span data-register-high>C6</span>
+          <div class="keyboard-register">
+            <span data-register-low>A0</span>
+            <label class="keyboard-navigator" for="keyboard-position">
+              <span>FULL 88 / A0-C8</span>
+              <input
+                id="keyboard-position"
+                name="keyboard-position"
+                data-testid="keyboard-navigator"
+                type="range"
+                min="21"
+                max="108"
+                value="60"
+                aria-label="Keyboard position"
+              />
+            </label>
+            <span data-register-high>C8</span>
           </div>
-          <div
-            class="piano-keyboard"
-            id="piano-keyboard"
-            data-testid="piano-keyboard"
-            role="group"
-            aria-label="Playable piano keyboard"
-          >
-            <div class="white-keys"></div>
-            <div class="black-keys"></div>
+          <div class="piano-keyboard-scroll" data-testid="keyboard-scroll" tabindex="0">
+            <div
+              class="piano-keyboard"
+              id="piano-keyboard"
+              data-testid="piano-keyboard"
+              role="group"
+              aria-label="Playable 88-key piano keyboard from A0 to C8"
+            >
+              <div class="white-keys"></div>
+              <div class="black-keys"></div>
+            </div>
           </div>
         </section>
 

@@ -80,8 +80,14 @@ here and wire it into `check`. Growing this file is the work.
 - The piano must synthesize every key live through Web Audio, support pointer
   glissando and keydown/keyup performance, and expose timbre, octave, sustain
   and volume as playable controls.
-- The piano room must show multiple octaves at desktop widths and a complete,
-  finger-sized octave at the phone breakpoint without horizontal overflow.
+- The piano keybed must contain all 88 standard keys from A0 (MIDI 21) to C8
+  (MIDI 108). It may scroll inside its own bench, but must offer a labelled
+  range navigator and never create horizontal overflow on the document.
+- The visible key width must show multiple octaves at desktop widths and about
+  one finger-sized octave at the phone breakpoint.
+- Concert must be the default piano voice. Its acoustic character must come
+  from live string partials, subtle detuning, a generated hammer transient and
+  pitch-dependent decay, never an audio asset or downloaded piano sample.
 - Its automatic performance must reuse the authored event data in
   `COMPOSITIONS`, illuminate the notes it performs, and begin only after the
   player presses its transport control.
