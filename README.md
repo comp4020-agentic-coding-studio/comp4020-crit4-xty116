@@ -15,7 +15,7 @@ The prototype now has two linked performance rooms: **Song Studio** for arrangin
 - Move to **Piano Room** for a continuous, scrollable 88-key piano from A0 to C8.
 - Play Concert, Felt and Electric voices with pointer glissando or the `A W S E D F T G Y H U J K` keys.
 - Move across the full keybed with its range navigator or register controls; the mobile viewport keeps one finger-sized octave in view.
-- Shape register, sustain and volume, or perform the complete 37-second Glasshouse Morning piano arrangement.
+- Shape register, sustain and volume, or perform the complete 34-second public-domain **Ode to Joy** theme, credited to Ludwig van Beethoven.
 
 Each example contains explicit pitches, note lengths, dynamics and chord qualities. The automatic arrangement, opening gesture, grid previews and manual pads share the same six Web Audio signal paths. No samples or recordings are used.
 
