@@ -130,7 +130,6 @@ function createKey(midi: number, whiteBefore: number, whiteCount: number): HTMLB
   key.style.setProperty("--white-before", String(whiteBefore));
   key.style.setProperty("--white-count", String(whiteCount));
 
-  const mappedMidi = midiForOctave(register) + KEYBOARD_KEYS.findIndex((_, index) => index === midi - midiForOctave(register));
   const mappingIndex = midi - midiForOctave(register);
   const keyHint = mappingIndex >= 0 && mappingIndex < KEYBOARD_KEYS.length ? KEYBOARD_KEYS[mappingIndex] : null;
 
@@ -140,7 +139,7 @@ function createKey(midi: number, whiteBefore: number, whiteCount: number): HTMLB
     const note = document.createElement("span");
     note.textContent = noteName(midi);
     label.append(note);
-    if (keyHint && mappedMidi === midi) {
+    if (keyHint) {
       const hint = document.createElement("kbd");
       hint.textContent = keyHint.toUpperCase();
       label.append(hint);
@@ -414,7 +413,7 @@ function buildTimeline(): { readonly steps: readonly TimelineStep[]; readonly du
   let offset = 0;
   for (let barIndex = 0; barIndex < composition.bars.length; barIndex += 1) {
     for (let stepIndex = 0; stepIndex < STEPS_PER_BAR; stepIndex += 1) {
-      const duration = stepDurationSeconds(composition.tempo, stepIndex, composition.swing);
+      const duration = stepDurationSeconds(composition.tempo, stepIndex, composition.swing / 100);
       steps.push({ offset, duration, barIndex, stepIndex });
       offset += duration;
     }
@@ -533,6 +532,25 @@ function drawVisual(): void {
     canvasContext.stroke();
   }
 
+  const totalSteps = composition.bars.length * STEPS_PER_BAR;
+  for (let barIndex = 0; barIndex < composition.bars.length; barIndex += 1) {
+    const bar = composition.bars[barIndex];
+    for (let trackIndex = 3; trackIndex <= 5; trackIndex += 1) {
+      for (let stepIndex = 0; stepIndex < STEPS_PER_BAR; stepIndex += 1) {
+        const event = bar.rows[trackIndex][stepIndex];
+        if (!event || event.pitch === undefined) continue;
+        const fitted = fitToVisibleRange(event.pitch);
+        const x = ((barIndex * STEPS_PER_BAR + stepIndex + 0.5) / totalSteps) * width;
+        const pitchPosition = (fitted - rangeLowMidi) / Math.max(1, rangeHighMidi - rangeLowMidi);
+        const y = height - 35 - pitchPosition * Math.max(1, height - 70);
+        canvasContext.globalAlpha = trackIndex === 3 ? 0.08 : trackIndex === 4 ? 0.16 : 0.1;
+        canvasContext.fillStyle = KEY_COLOURS[fitted % 12];
+        canvasContext.fillRect(x, y, Math.max(3, event.length * 1.7), trackIndex === 4 ? 3 : 2);
+      }
+    }
+  }
+  canvasContext.globalAlpha = 1;
+
   const now = performance.now();
   for (let index = visualTrails.length - 1; index >= 0; index -= 1) {
     const trail = visualTrails[index];
@@ -571,6 +589,14 @@ function drawVisual(): void {
   if (demoPlaying && audioContext) {
     const ratio = Math.min(1, Math.max(0, (audioContext.currentTime - demoStartTime) / timeline.duration));
     progress.style.transform = `scaleX(${ratio})`;
+    canvasContext.strokeStyle = "#fffefa";
+    canvasContext.globalAlpha = 0.22;
+    canvasContext.lineWidth = 1;
+    canvasContext.beginPath();
+    canvasContext.moveTo(ratio * width, 0);
+    canvasContext.lineTo(ratio * width, height);
+    canvasContext.stroke();
+    canvasContext.globalAlpha = 1;
   }
 
   requestAnimationFrame(drawVisual);
