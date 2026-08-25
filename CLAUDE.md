@@ -88,9 +88,10 @@ here and wire it into `check`. Growing this file is the work.
 - Concert must be the default piano voice. Its acoustic character must come
   from live string partials, subtle detuning, a generated hammer transient and
   pitch-dependent decay, never an audio asset or downloaded piano sample.
-- Its automatic performance must reuse the authored event data in
-  `COMPOSITIONS`, illuminate the notes it performs, and begin only after the
-  player presses its transport control.
+- Its automatic performance must use structured pitch, rhythm, harmony and
+  accompaniment data, illuminate the notes it performs, and begin only after
+  the player presses its transport control. A familiar work must be public
+  domain and visibly credit its composer; it must never become an audio asset.
 - At 390x844 the first note, pattern library, grid and transport must all remain
   reachable without horizontal overflow.
 - A week-specific contract may be committed red once as a deliberate baseline.

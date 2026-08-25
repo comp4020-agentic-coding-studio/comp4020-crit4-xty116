@@ -30,7 +30,7 @@ describe("crit 4: Piano Room is a second complete live instrument", () => {
     expect(doc.querySelector('[data-testid="octave-up"]')).toBeTruthy();
     expect(doc.querySelector('input[name="piano-volume"]')).toBeTruthy();
     expect(doc.querySelector('[data-testid="piano-demo"]')).toBeTruthy();
-    expect(source).toMatch(/COMPOSITIONS/);
+    expect(source).toMatch(/CLASSIC_PERFORMANCE/);
     expect(source).toMatch(/scheduleDemo/);
   });
 

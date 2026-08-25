@@ -1,10 +1,10 @@
 import {
-  COMPOSITIONS,
   STEPS_PER_BAR,
   noteName,
   stepDurationSeconds,
 } from "./instrument-model.ts";
 import type { ChordQuality, NoteEvent } from "./instrument-model.ts";
+import { CLASSIC_PERFORMANCE } from "./piano-performance.ts";
 
 type Timbre = "grand" | "felt" | "electric";
 
@@ -62,7 +62,7 @@ const volumeInput = required<HTMLInputElement>('input[name="piano-volume"]');
 const canvas = required<HTMLCanvasElement>("#piano-visual");
 const canvasContext = requiredCanvasContext(canvas);
 
-const composition = COMPOSITIONS[0];
+const composition = CLASSIC_PERFORMANCE;
 const KEY_COLOURS = [
   "#ff725e", "#ff8a65", "#f2bf4b", "#d4c957", "#52c896", "#56c3c0",
   "#5aa7ff", "#7d9dff", "#a787ff", "#c47ee7", "#ff8fc2", "#ff7890",
@@ -547,7 +547,7 @@ function stopDemo(message = "Performance stopped. The piano is yours."): void {
   if (demoInterval !== null) window.clearInterval(demoInterval);
   demoInterval = null;
   demoButton.setAttribute("aria-pressed", "false");
-  demoLabel.textContent = "Perform the song";
+  demoLabel.textContent = "Perform the classic";
   clearDemoVisuals();
   resetPerformanceLabels();
   status.textContent = message;
@@ -578,7 +578,7 @@ async function startDemo(): Promise<void> {
   demoStartTime = context.currentTime + 0.08;
   demoButton.setAttribute("aria-pressed", "true");
   demoLabel.textContent = "Stop performance";
-  status.textContent = "Glasshouse Morning / full piano performance";
+  status.textContent = `${composition.title} / ${composition.composer}`;
   scheduleDemo();
   demoInterval = window.setInterval(scheduleDemo, 25);
 }
@@ -736,7 +736,7 @@ window.addEventListener("blur", () => {
 
 beginButton.addEventListener("click", async () => {
   const context = await ensureAudio();
-  const notes = [0, 4, 7, 12];
+  const notes = [2, 6, 9, 14];
   notes.forEach((offset, index) => {
     const midi = fitToVisibleRange(midiForOctave(register) + offset);
     const when = context.currentTime + index * 0.13;
