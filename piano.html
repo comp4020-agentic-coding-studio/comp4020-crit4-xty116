@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Piano Room | WEAVE</title>
+    <meta
+      name="description"
+      content="Play a responsive live-synth piano, shape its tone and hear an original complete WEAVE composition performed across the keys."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./card.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#101012" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./piano.css" />
+  </head>
+  <body>
+    <main id="piano-stage" data-testid="piano-instrument" data-state="waiting">
+      <header class="topbar">
+        <nav aria-label="Primary">
+          <a class="brand" href="./index.html" aria-label="WEAVE Song Studio home">
+            <span class="weave-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+            <strong>WEAVE</strong>
+          </a>
+        </nav>
+        <nav class="view-switch" aria-label="Instrument rooms">
+          <a href="./index.html">Song Studio</a>
+          <a href="./piano.html" aria-current="page">Piano Room</a>
+        </nav>
+        <div class="engine-state" aria-hidden="true"><span></span>ENGINE</div>
+      </header>
+
+      <div class="piano-room-shell">
+        <section class="piano-atmosphere" aria-labelledby="piano-title">
+          <canvas id="piano-visual" data-testid="piano-visual" aria-hidden="true"></canvas>
+          <div class="staff-labels" aria-hidden="true"><span>06</span><span>05</span><span>04</span><span>03</span></div>
+
+          <div class="piano-heading">
+            <p class="room-kicker">PERFORMANCE ROOM / LIVE SYNTHESIS</p>
+            <h1 id="piano-title">Piano Room</h1>
+            <p>A quiet room for loud ideas.</p>
+          </div>
+
+          <div class="piano-performance">
+            <div class="performance-identity">
+              <span>ORIGINAL PERFORMANCE</span>
+              <strong data-testid="piano-piece-title">Glasshouse Morning</strong>
+              <p><b data-testid="piano-section">INTRO</b><i></i><span data-testid="piano-phrase">Dawn air</span></p>
+            </div>
+            <div class="piano-progress" aria-hidden="true"><i data-piano-progress></i></div>
+            <button type="button" data-testid="piano-demo" aria-pressed="false">
+              <span class="piano-play-icon" aria-hidden="true"></span>
+              <span><small>FULL PIECE / 0:37</small><b data-demo-label>Perform the song</b></span>
+            </button>
+          </div>
+
+          <button
+            class="begin-piano"
+            type="button"
+            data-testid="begin-piano"
+            aria-controls="piano-keyboard"
+          >
+            <span aria-hidden="true">C</span>
+            <span><small>FIRST GESTURE</small>Open the piano</span>
+          </button>
+        </section>
+
+        <section class="piano-console" aria-label="Piano controls">
+          <div class="tone-control">
+            <span class="control-label">VOICE</span>
+            <div class="timbre-switch" role="group" aria-label="Piano voice">
+              <button type="button" data-timbre="felt" aria-pressed="true"><i></i>Felt</button>
+              <button type="button" data-timbre="prism" aria-pressed="false"><i></i>Prism</button>
+              <button type="button" data-timbre="reed" aria-pressed="false"><i></i>Reed</button>
+            </div>
+          </div>
+
+          <div class="octave-control">
+            <span class="control-label">REGISTER</span>
+            <div>
+              <button type="button" data-testid="octave-down" title="Lower octave" aria-label="Lower octave">&minus;</button>
+              <output data-octave-output>OCT 4</output>
+              <button type="button" data-testid="octave-up" title="Higher octave" aria-label="Higher octave">+</button>
+            </div>
+          </div>
+
+          <div class="sustain-control">
+            <span class="control-label">SUSTAIN</span>
+            <button type="button" role="switch" data-testid="sustain-toggle" aria-checked="false">
+              <i aria-hidden="true"></i><span data-sustain-label>Off</span>
+            </button>
+          </div>
+
+          <label class="volume-control" for="piano-volume">
+            <span class="control-label">VOLUME</span>
+            <input id="piano-volume" name="piano-volume" type="range" min="0" max="100" value="72" />
+          </label>
+        </section>
+
+        <section class="keyboard-bench" aria-label="Playable piano">
+          <div class="keyboard-register" aria-hidden="true">
+            <span data-register-low>C3</span><span>WEAVE / 88</span><span data-register-high>C6</span>
+          </div>
+          <div
+            class="piano-keyboard"
+            id="piano-keyboard"
+            data-testid="piano-keyboard"
+            role="group"
+            aria-label="Playable piano keyboard"
+          >
+            <div class="white-keys"></div>
+            <div class="black-keys"></div>
+          </div>
+        </section>
+
+        <footer class="status-bar piano-status-bar">
+          <p data-testid="piano-status" role="status" aria-live="polite">The room is ready.</p>
+          <p>NO SAMPLES / EACH NOTE BUILT AS YOU PLAY</p>
+        </footer>
+      </div>
+    </main>
+    <script type="module" src="./piano.ts"></script>
+  </body>
+</html>

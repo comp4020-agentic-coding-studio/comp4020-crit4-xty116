@@ -1,0 +1,508 @@
+#piano-stage {
+  width: 100%;
+  min-height: 100svh;
+  background: #101012;
+  color: #f8f6f2;
+}
+
+#piano-stage button,
+#piano-stage a,
+#piano-stage input { touch-action: manipulation; }
+
+.piano-room-shell {
+  display: grid;
+  grid-template-rows: minmax(300px, 1fr) 88px 280px 34px;
+  min-height: calc(100svh - 60px);
+  overflow: hidden;
+  background: #101012;
+}
+
+.piano-atmosphere {
+  position: relative;
+  min-height: 300px;
+  overflow: hidden;
+  border-bottom: 1px solid #303034;
+  background: #151518;
+}
+
+#piano-visual {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.staff-labels {
+  position: absolute;
+  top: 25px;
+  right: 24px;
+  bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #5e5d62;
+  font: 7px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.piano-heading {
+  position: absolute;
+  top: 38px;
+  left: 34px;
+  z-index: 2;
+}
+
+.room-kicker,
+.control-label,
+.piano-performance,
+.begin-piano,
+.keyboard-register,
+.piano-key {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0;
+}
+
+.room-kicker {
+  margin: 0 0 12px;
+  color: #52c896;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.piano-heading h1 {
+  margin: 0;
+  color: #fffefa;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 72px;
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.piano-heading > p:last-child {
+  margin: 14px 0 0;
+  color: #9b999e;
+  font-size: 15px;
+}
+
+.begin-piano {
+  position: absolute;
+  top: 42px;
+  right: 68px;
+  z-index: 3;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  min-width: 210px;
+  min-height: 58px;
+  padding: 9px 16px 9px 10px;
+  border: 1px solid #55545a;
+  border-radius: 3px;
+  background: rgba(16, 16, 18, 0.88);
+  color: #fffefa;
+  text-align: left;
+  cursor: pointer;
+}
+
+.begin-piano > span:first-child {
+  display: grid;
+  place-items: end center;
+  width: 38px;
+  height: 40px;
+  padding-bottom: 5px;
+  border-bottom: 4px solid #52c896;
+  background: #f4f1e9;
+  color: #171719;
+  font-size: 8px;
+}
+
+.begin-piano small,
+.piano-performance small {
+  display: block;
+  margin-bottom: 5px;
+  color: #858389;
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.begin-piano:hover { border-color: #52c896; }
+[data-state="active"] .begin-piano { opacity: 0.58; }
+
+.piano-performance {
+  position: absolute;
+  right: 70px;
+  bottom: 28px;
+  left: 34px;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(210px, 0.7fr) minmax(180px, 1fr) auto;
+  gap: 26px;
+  align-items: end;
+}
+
+.performance-identity > span {
+  display: block;
+  margin-bottom: 8px;
+  color: #6f6e73;
+  font-size: 7px;
+}
+
+.performance-identity > strong {
+  display: block;
+  color: #fffefa;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.performance-identity p {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0 0;
+  color: #858389;
+  font-size: 8px;
+}
+
+.performance-identity p b { color: #ff725e; }
+.performance-identity p i { width: 18px; height: 1px; background: #4c4b50; }
+
+.piano-progress {
+  height: 5px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  background: #303034;
+}
+
+.piano-progress i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #52c896;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.piano-performance > button {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  min-width: 200px;
+  min-height: 56px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 3px;
+  background: #f2bf4b;
+  color: #171719;
+  text-align: left;
+  cursor: pointer;
+}
+
+.piano-play-icon {
+  width: 0;
+  height: 0;
+  margin-left: 3px;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 11px solid #171719;
+}
+
+.piano-performance > button[aria-pressed="true"] .piano-play-icon {
+  width: 10px;
+  height: 14px;
+  margin-left: 0;
+  border: 0;
+  border-right: 3px solid #171719;
+  border-left: 3px solid #171719;
+}
+
+.piano-console {
+  display: grid;
+  grid-template-columns: minmax(310px, 1.5fr) minmax(180px, 0.8fr) minmax(150px, 0.65fr) minmax(180px, 0.8fr);
+  min-width: 0;
+  border-bottom: 1px solid #353439;
+  background: #202024;
+}
+
+.piano-console > div,
+.piano-console > label {
+  display: grid;
+  align-content: center;
+  min-width: 0;
+  padding: 12px 24px;
+  border-right: 1px solid #353439;
+}
+
+.control-label {
+  display: block;
+  margin-bottom: 9px;
+  color: #7b797f;
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.timbre-switch {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.timbre-switch button {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  justify-content: center;
+  min-height: 29px;
+  border: 1px solid #49484e;
+  border-right: 0;
+  background: transparent;
+  color: #aaa8ae;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.timbre-switch button:last-child { border-right: 1px solid #49484e; }
+.timbre-switch button[aria-pressed="true"] { background: #f7f4ec; color: #171719; }
+.timbre-switch i { width: 5px; height: 5px; border-radius: 50%; background: #ff725e; }
+.timbre-switch button:nth-child(2) i { background: #5aa7ff; }
+.timbre-switch button:nth-child(3) i { background: #a787ff; }
+
+.octave-control > div,
+.sustain-control > button {
+  display: grid;
+  grid-template-columns: 30px 1fr 30px;
+  align-items: center;
+}
+
+.octave-control button {
+  width: 30px;
+  height: 29px;
+  padding: 0;
+  border: 1px solid #49484e;
+  background: transparent;
+  color: #f8f6f2;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.octave-control output {
+  display: grid;
+  place-items: center;
+  height: 29px;
+  border-top: 1px solid #49484e;
+  border-bottom: 1px solid #49484e;
+  color: #c4c1c8;
+  font: 9px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.sustain-control > button {
+  grid-template-columns: 28px auto;
+  justify-content: start;
+  gap: 9px;
+  min-height: 29px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #aaa8ae;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.sustain-control button i {
+  position: relative;
+  width: 28px;
+  height: 14px;
+  border: 1px solid #5b5a60;
+  border-radius: 7px;
+}
+
+.sustain-control button i::after {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #858389;
+  content: "";
+}
+
+.sustain-control button[aria-checked="true"] { color: #fffefa; }
+.sustain-control button[aria-checked="true"] i { border-color: #52c896; }
+.sustain-control button[aria-checked="true"] i::after { left: 16px; background: #52c896; }
+
+.volume-control input {
+  width: 100%;
+  height: 3px;
+  margin: 7px 0;
+  accent-color: #ff725e;
+  cursor: pointer;
+}
+
+.keyboard-bench {
+  min-width: 0;
+  overflow: hidden;
+  border-bottom: 1px solid #d0ccc4;
+  background: #e3dfd6;
+}
+
+.keyboard-register {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 32px;
+  padding: 0 16px;
+  border-bottom: 1px solid #b8b4ac;
+  color: #6e6b66;
+  font-size: 7px;
+  font-weight: 700;
+}
+
+.keyboard-register span:last-child { justify-self: end; }
+
+.piano-keyboard {
+  position: relative;
+  width: 100%;
+  height: 248px;
+  overflow: hidden;
+  user-select: none;
+  touch-action: none;
+}
+
+.white-keys {
+  display: grid;
+  grid-template-columns: repeat(var(--white-count), minmax(0, 1fr));
+  width: 100%;
+  height: 100%;
+}
+
+.black-keys { position: absolute; inset: 0; pointer-events: none; }
+
+.piano-key {
+  position: relative;
+  appearance: none;
+  border-radius: 0 0 3px 3px;
+  cursor: pointer;
+  transition: background-color 80ms ease, transform 80ms ease;
+}
+
+.piano-key.white {
+  min-width: 0;
+  border: 0;
+  border-right: 1px solid #aaa69f;
+  background: #f7f4ec;
+  color: #66635f;
+}
+
+.piano-key.white:first-child { border-left: 1px solid #aaa69f; }
+.piano-key.black {
+  position: absolute;
+  top: 0;
+  left: calc((var(--white-before) / var(--white-count)) * 100% - (100% / var(--white-count) * 0.31));
+  z-index: 2;
+  width: calc(100% / var(--white-count) * 0.62);
+  height: 61%;
+  border: 1px solid #050506;
+  border-top: 0;
+  background: #151518;
+  box-shadow: 0 7px 0 #080809;
+  color: #aaa8ae;
+  pointer-events: auto;
+}
+
+.piano-key-label {
+  position: absolute;
+  right: 0;
+  bottom: 11px;
+  left: 0;
+  display: grid;
+  gap: 7px;
+  justify-items: center;
+  font-size: 7px;
+  pointer-events: none;
+}
+
+.piano-key-label kbd {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #c8c4bc;
+  border-radius: 2px;
+  color: #8d8982;
+  font: 7px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.black .piano-key-label { bottom: 9px; gap: 5px; color: #77767b; }
+.black .piano-key-label kbd { width: 16px; height: 16px; border-color: #3a393e; color: #77767b; }
+.piano-key.is-active { background: var(--key-colour); transform: translateY(3px); }
+.piano-key.black.is-active { box-shadow: 0 3px 0 #080809; color: #171719; }
+
+.piano-status-bar { border-top: 0; }
+[data-state="active"] .piano-status-bar p:first-child { color: #52c896; }
+
+@media (max-width: 900px) {
+  .piano-heading h1 { font-size: 58px; }
+  .piano-console { grid-template-columns: 1.3fr 0.8fr 0.65fr 0.8fr; }
+  .piano-console > div,
+  .piano-console > label { padding-right: 13px; padding-left: 13px; }
+}
+
+@media (max-width: 700px) {
+  .piano-room-shell {
+    grid-template-rows: 275px 166px 255px 32px;
+    min-height: calc(100svh - 54px);
+    overflow: visible;
+  }
+
+  .piano-atmosphere { min-height: 275px; }
+  .staff-labels { right: 10px; }
+  .piano-heading { top: 27px; left: 14px; }
+  .room-kicker { margin-bottom: 9px; font-size: 6px; }
+  .piano-heading h1 { font-size: 43px; }
+  .piano-heading > p:last-child { margin-top: 9px; font-size: 12px; }
+
+  .begin-piano {
+    top: 27px;
+    right: 14px;
+    min-width: 0;
+    min-height: 43px;
+    padding: 6px 8px;
+  }
+  .begin-piano > span:first-child { width: 29px; height: 30px; }
+  .begin-piano > span:last-child { display: none; }
+
+  .piano-performance {
+    right: 14px;
+    bottom: 16px;
+    left: 14px;
+    grid-template-columns: 1fr 112px;
+    gap: 12px;
+  }
+  .performance-identity > strong { font-size: 17px; }
+  .performance-identity p { margin-top: 6px; }
+  .piano-progress { grid-column: 1 / -1; grid-row: 2; margin: 0; }
+  .piano-performance > button {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    min-height: 48px;
+    padding: 8px 10px;
+  }
+  .piano-performance > button small { display: none; }
+  .piano-performance > button b { font-size: 9px; }
+
+  .piano-console { grid-template-columns: 1.35fr 1fr; grid-template-rows: 83px 83px; }
+  .piano-console > div,
+  .piano-console > label { padding: 10px 12px; border-bottom: 1px solid #353439; }
+  .piano-console > :nth-child(2n) { border-right: 0; }
+  .control-label { margin-bottom: 7px; }
+  .timbre-switch button { gap: 4px; font-size: 8px; }
+  .timbre-switch i { display: none; }
+
+  .keyboard-register { height: 32px; padding: 0 10px; }
+  .piano-keyboard { height: 223px; }
+  .piano-key-label { bottom: 10px; }
+  .piano-key-label kbd { width: 20px; height: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .piano-key { transition: none; }
+}
