@@ -12,8 +12,9 @@ The prototype now has two linked performance rooms: **Song Studio** for arrangin
 - Perform Pulse, Clap, Lowline, Harmony, Lead and Glint with the on-screen pads or `A S D J K L`.
 - Open any of the eight phrases and edit its 16-step grid. Pitched cells display their actual note names.
 - Recompose a phrase or reshape the full performance with three palettes, tempo and swing.
-- Move to **Piano Room** for a responsive three-octave keyboard, or one finger-sized octave on mobile.
-- Play its Felt, Prism and Reed voices with pointer glissando or the `A W S E D F T G Y H U J K` keys.
+- Move to **Piano Room** for a continuous, scrollable 88-key piano from A0 to C8.
+- Play Concert, Felt and Electric voices with pointer glissando or the `A W S E D F T G Y H U J K` keys.
+- Move across the full keybed with its range navigator or register controls; the mobile viewport keeps one finger-sized octave in view.
 - Shape register, sustain and volume, or perform the complete 37-second Glasshouse Morning piano arrangement.
 
 Each example contains explicit pitches, note lengths, dynamics and chord qualities. The automatic arrangement, opening gesture, grid previews and manual pads share the same six Web Audio signal paths. No samples or recordings are used.
