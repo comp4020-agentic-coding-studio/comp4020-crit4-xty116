@@ -7,6 +7,7 @@ describe("Piano Room public-domain score", () => {
     expect(CLASSIC_PERFORMANCE.title).toBe("Ode to Joy");
     expect(CLASSIC_PERFORMANCE.composer).toBe("Ludwig van Beethoven");
     expect(CLASSIC_PERFORMANCE.publicDomain).toBe(true);
+    expect(CLASSIC_PERFORMANCE.scoreSource).toContain("mutopia");
   });
 
   it("contains a full sixteen-bar piano arrangement", () => {
@@ -18,22 +19,35 @@ describe("Piano Room public-domain score", () => {
     expect(compositionDurationSeconds(CLASSIC_PERFORMANCE)).toBeCloseTo(34.29, 1);
   });
 
-  it("writes the familiar opening melody explicitly", () => {
-    const melody = CLASSIC_PERFORMANCE.bars[0].rows[4]
-      .filter((event) => event?.pitch !== undefined)
-      .map((event) => event?.pitch);
-    expect(melody).toEqual([66, 66, 67, 69, 69, 67, 66, 64]);
+  it("matches the complete sixteen-bar soprano melody and its onsets", () => {
+    const expected = [
+      [[0, 66], [2, 66], [4, 67], [6, 69], [8, 69], [10, 67], [12, 66], [14, 64]],
+      [[0, 62], [2, 62], [4, 64], [6, 66], [8, 66], [11, 64], [12, 64]],
+      [[0, 66], [2, 66], [4, 67], [6, 69], [8, 69], [10, 67], [12, 66], [14, 64]],
+      [[0, 62], [2, 62], [4, 64], [6, 66], [8, 64], [11, 62], [12, 62]],
+      [[0, 64], [2, 64], [4, 66], [6, 62], [8, 64], [10, 66], [11, 67], [12, 66], [14, 62]],
+      [[0, 64], [2, 66], [3, 67], [4, 66], [6, 64], [8, 62], [10, 64], [12, 57]],
+      [[0, 66], [2, 66], [4, 67], [6, 69], [8, 69], [10, 67], [12, 66], [14, 64]],
+      [[0, 62], [2, 62], [4, 64], [6, 66], [8, 64], [11, 62], [12, 62]],
+    ];
+    const notation = CLASSIC_PERFORMANCE.bars.map((phrase) =>
+      phrase.rows[4].flatMap((event, step) => event?.pitch === undefined ? [] : [[step, event.pitch]]),
+    );
+    expect(notation).toEqual(expected);
 
-    const allMelody = CLASSIC_PERFORMANCE.bars.flatMap((phrase) => phrase.rows[4]);
-    expect(allMelody.filter((event) => event?.pitch !== undefined).length).toBeGreaterThanOrEqual(60);
-    expect(new Set(allMelody.map((event) => event?.pitch).filter(Boolean)).size).toBeGreaterThanOrEqual(6);
+    const firstCadence = CLASSIC_PERFORMANCE.bars[1].rows[4];
+    expect(firstCadence[8]?.length).toBeCloseTo(2.82);
+    expect(firstCadence[11]?.length).toBeCloseTo(0.82);
+    expect(firstCadence[12]?.length).toBeCloseTo(3.82);
   });
 
-  it("includes bass, harmony and arpeggiated accompaniment", () => {
+  it("uses the source score's four-part accompaniment instead of guessed chords", () => {
     const eventsForRow = (rowIndex: number) =>
       CLASSIC_PERFORMANCE.bars.flatMap((phrase) => phrase.rows[rowIndex]).filter(Boolean);
-    expect(eventsForRow(2).length).toBeGreaterThanOrEqual(32);
-    expect(eventsForRow(3).every((event) => event?.chord)).toBe(true);
-    expect(eventsForRow(5).length).toBeGreaterThanOrEqual(32);
+    for (const rowIndex of [2, 3, 4, 5]) {
+      expect(eventsForRow(rowIndex).length).toBeGreaterThanOrEqual(60);
+      expect(eventsForRow(rowIndex).every((event) => event?.pitch !== undefined)).toBe(true);
+      expect(eventsForRow(rowIndex).every((event) => event?.chord === undefined)).toBe(true);
+    }
   });
 });
